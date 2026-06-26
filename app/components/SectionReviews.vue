@@ -1,5 +1,5 @@
 <template>
-  <section class="relative w-full flex flex-col items-center gap-5 px-5 py-12 overflow-hidden">
+  <section class="relative w-full flex flex-col items-center gap-5 px-5 sm:px-8 md:px-10 lg:px-16 xxl:px-32 py-12 overflow-hidden">
 
     <NuxtImg
       src="/images/gradient-stain.png"
@@ -24,16 +24,16 @@
     />
 
     <h2 class="relative z-10 font-heading text-lg text-primary text-center leading-1">
-      Lo que dicen quienes ya<br>están sumando
+      Lo que dicen quienes ya están sumando
     </h2>
 
-    <div class="relative z-10 w-full flex flex-col gap-3">
+    <div class="relative z-10 w-full flex flex-col items-center gap-3">
       <div
         v-for="review in reviews"
         :key="review.name + review.age"
-        class="w-full flex flex-col gap-1 bg-light border border-green-light rounded-lg p-3"
+        class="w-full max-w-[420px] flex flex-col gap-1 bg-light border border-green-light rounded-lg p-3"
       >
-        <div class="flex items-center justify-between">
+        <div class="flex justify-between">
           <div class="flex items-center gap-3">
             <div class="w-6 h-6 rounded-full bg-gradient-secondary flex items-center justify-center text-light text-xs font-semibold shrink-0">
               {{ review.name.charAt(0) }}

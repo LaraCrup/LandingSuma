@@ -1,20 +1,20 @@
 <template>
-  <section class="relative w-full flex flex-col items-center justify-center gap-5 px-5 pt-6 pb-[224px]">
+  <section class="relative w-full flex flex-col items-center justify-center gap-5 px-5 sm:px-8 md:px-10 lg:px-16 xxl:px-32 pt-6 pb-[224px]">
     <NuxtImg src="/images/brillo-primary.svg" alt="Logo" width="20" height="20" />
     <div class="w-full flex flex-col items-center justify-center gap-2">
       <h1 class="text-lg font-heading text-primary font-medium text-center leading-1">La constancia en tu bienestar
         merece recompensas</h1>
       <p class="text-xs text-center">Completá tus datos y retirás tu premio ahora.</p>
     </div>
-    <form class="w-full flex flex-col gap-3" @submit.prevent="handleSubmit">
+    <form class="w-full flex flex-col items-center gap-3" @submit.prevent="handleSubmit">
 
-      <div class="flex flex-col gap-1">
+      <div class="w-full max-w-[420px] flex flex-col gap-1">
         <label class="text-xs text-primary">Correo electrónico</label>
         <input v-model="email" type="email" placeholder="Ingresá tu correo electrónico"
           class="w-full text-xs bg-light border border-primary rounded-full px-5 py-3 placeholder:text-gray outline-none focus:ring-2 focus:ring-primary/30" />
       </div>
 
-      <div class="flex flex-col gap-1">
+      <div class="w-full max-w-[420px] flex flex-col gap-1">
         <label class="text-xs  text-primary">Número de corredor</label>
         <div class="flex gap-2">
           <input v-for="(_, i) in runnerCode" :key="i" :ref="el => { if (el) inputs[i] = el as HTMLInputElement }"
@@ -24,7 +24,7 @@
         </div>
       </div>
 
-      <button type="submit" class="w-full bg-primary text-light text-xs rounded-full py-3">
+      <button type="submit" class="w-full max-w-64 bg-primary text-light text-xs rounded-full py-3">
         Canjear premio
       </button>
 

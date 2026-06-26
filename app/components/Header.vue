@@ -1,5 +1,5 @@
 <template>
-  <header class="w-full flex justify-between items-center bg-light px-5 py-3 shadow-[0_4px_4px_0_rgba(0,0,0,0.25)]">
+  <header class="w-full flex justify-between items-center bg-light px-5 sm:px-8 md:px-10 lg:px-16 xxl:px-32 py-3 shadow-[0_4px_4px_0_rgba(0,0,0,0.25)]">
     <NuxtImg
       src="/images/isotipo.svg"
       alt="Logo"

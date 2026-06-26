@@ -1,79 +1,65 @@
 <template>
-    <section class="w-full flex flex-col items-center gap-5 bg-green-dark px-5 py-12">
+    <section
+        class="w-full flex flex-col items-center gap-5 bg-green-dark py-12">
 
-        <div class="w-full flex flex-col items-center gap-2 text-center">
-            <h2 class="text-lg font-heading text-accent font-medium">¿Qué es suma?</h2>
-            <p class="text-xs text-light leading-1">
-                <span class="text-accent">suma</span> es una app que te impulsa y motiva a crear hábitos saludables, que premia tu constancia con recompensas de marcas aliadas
-            </p>
-        </div>
+        <div class="w-full flex flex-col items-center gap-5 px-5 sm:px-8 md:px-10 lg:px-16 xxl:px-32">
+            <div class="w-full flex flex-col items-center gap-2 text-center">
+                <h2 class="text-lg font-heading text-accent font-medium">¿Qué es suma?</h2>
+                <p class="text-xs text-light leading-1">
+                    <span class="text-accent">suma</span> es una app que te impulsa y motiva a crear hábitos saludables,
+                    que premia tu constancia con recompensas de marcas aliadas
+                </p>
+            </div>
 
-        <div class="w-full flex flex-col items-center gap-2">
-            <button
-                ref="cardRef"
-                @touchstart="handleTouchStart"
-                @touchend="handleTouchEnd"
-                :class="['w-full relative overflow-hidden flex justify-between rounded-lg p-3 transition-colors', isCompleted ? 'bg-accent' : 'bg-midlight']">
+            <div class="w-full flex flex-col items-center gap-2">
+                <button ref="cardRef" @touchstart="handleTouchStart" @touchend="handleTouchEnd"
+                    :class="['w-full max-w-[420px] relative overflow-hidden flex justify-between rounded-lg p-3 transition-colors', isCompleted ? 'bg-accent' : 'bg-midlight']">
 
-                <!-- swipe fill overlay -->
-                <div
-                    v-if="showSwipeFill"
-                    class="absolute inset-y-0 pointer-events-none"
-                    :class="[
+                    <!-- swipe fill overlay -->
+                    <div v-if="showSwipeFill" class="absolute inset-y-0 pointer-events-none" :class="[
                         swipeDirection === 'right' ? 'left-0 bg-accent' : 'right-0 bg-midlight',
                         pendingDirection ? 'transition-[width] duration-150' : ''
-                    ]"
-                    :style="{ width: swipeFillPercent + '%' }"
-                />
+                    ]" :style="{ width: swipeFillPercent + '%' }" />
 
-                <div class="relative flex gap-3 items-center min-w-0 flex-1">
-                    <div class="w-8 h-8 flex flex-shrink-0 items-center justify-center rounded-full bg-gradient-secondary">
-                        <p class="text-md">🏃</p>
+                    <div class="relative flex gap-3 items-center min-w-0 flex-1">
+                        <div
+                            class="w-8 h-8 flex flex-shrink-0 items-center justify-center rounded-full bg-gradient-secondary">
+                            <p class="text-md">🏃</p>
+                        </div>
+                        <div>
+                            <p class="text-xs text-start truncate text-dark">Correr una carrera</p>
+                            <p class="w-fit text-xs text-green-dark" :class="isCompleted ? 'font-bold' : 'font-normal'">
+                                {{ isCompleted ? 1 : 0 }}/1
+                            </p>
+                        </div>
                     </div>
-                    <div>
-                        <p class="text-xs text-start truncate text-dark">Correr una carrera</p>
-                        <p class="w-fit text-xs text-green-dark" :class="isCompleted ? 'font-bold' : 'font-normal'">
-                            {{ isCompleted ? 1 : 0 }}/1
-                        </p>
-                    </div>
-                </div>
 
-                <div class="relative flex items-center gap-2 flex-shrink-0">
-                    <div :class="['w-6 h-6 flex justify-center items-center rounded-full', isCompleted ? 'bg-green-dark' : 'border-gray border-[1px]']">
-                        <NuxtImg
-                            :src="isCompleted ? '/images/brillo-light-green.svg' : '/images/brillo.svg'"
-                            :alt="isCompleted ? 'Completado' : 'Brillo'"
-                            class="w-3"
-                        />
+                    <div class="relative flex items-center gap-2 flex-shrink-0">
+                        <div
+                            :class="['w-6 h-6 flex justify-center items-center rounded-full', isCompleted ? 'bg-green-dark' : 'border-gray border-[1px]']">
+                            <NuxtImg :src="isCompleted ? '/images/brillo-light-green.svg' : '/images/brillo.svg'"
+                                :alt="isCompleted ? 'Completado' : 'Brillo'" class="w-3" />
+                        </div>
                     </div>
-                </div>
-            </button>
+                </button>
 
-            <p class="text-light text-xs">Deslizá hacia la derecha &nbsp;→</p>
+                <p class="text-light text-xs">Deslizá hacia la derecha &nbsp;→</p>
+            </div>
         </div>
 
         <NuxtImg src="/images/brillo-accent.svg" alt="Brillo" class="w-5 h-5" />
 
-        <div class="w-full flex flex-col gap-3">
-            <h3 class="text-lg font-heading text-accent text-center leading-1">
+        <div class="w-full flex flex-col gap-3 pl-5 sm:pl-8 md:pl-10 lg:pl-16 xxl:pl-32">
+            <h3 class="text-lg font-heading text-accent text-center leading-1 pr-5 sm:pr-8 md:pr-10 lg:pr-16 xxl:pr-32">
                 Sumando hábitos accedés a beneficios de nuestros aliados
             </h3>
 
-            <Carousel
-                :slidesPerView="{ base: 2.3, sm: 3, md: 4, lg: 5 }"
-                :gap="8"
-                :showArrows="false"
+            <Carousel :slidesPerView="{ base: 2.3, sm: 3.3, md: 4, lg: 5 }" :gap="8" :showArrows="false"
                 :showDots="false">
-                <div
-                    v-for="brand in brands"
-                    :key="brand.id"
+                <div v-for="brand in brands" :key="brand.id"
                     class="bg-light rounded-2xl flex items-center justify-center p-3">
-                    <NuxtImg
-                        v-if="brand.image_url"
-                        :src="brand.image_url"
-                        :alt="brand.name"
-                        class="w-full h-9 object-contain"
-                    />
+                    <NuxtImg v-if="brand.image_url" :src="brand.image_url" :alt="brand.name"
+                        class="w-full h-9 sm:h-12 object-contain" />
                     <p v-else class="text-xs font-semibold text-dark text-center leading-tight">{{ brand.name }}</p>
                 </div>
             </Carousel>

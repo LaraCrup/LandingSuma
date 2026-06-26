@@ -13,7 +13,7 @@
             @mousemove="drag" @mouseup="endDrag" @mouseleave="endDrag" @touchstart="startDrag" @touchmove="drag"
             @touchend="endDrag">
 
-            <div class="carousel-wrapper flex items-end pb-2 px-1"
+            <div class="carousel-wrapper flex items-end pb-2 px-1 first:mr-4 md:first:mr-0"
                 :class="wrapperClass" :style="wrapperStyles">
                 <slot />
             </div>

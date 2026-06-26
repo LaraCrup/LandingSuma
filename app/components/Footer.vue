@@ -1,6 +1,6 @@
 <template>
   <footer class="w-full flex flex-col items-center">
-    <div class="w-full flex flex-col items-end gap-2 p-5">
+    <div class="w-full flex flex-col items-end gap-2 p-5 sm:px-8 md:px-10 lg:px-16 xxl:px-32">
       <div class="w-full flex items-center justify-between">
         <NuxtImg src="/images/isotipo.svg" alt="Logo" height="24" />
         <NuxtLink to="#" class="flex items-center gap-2">
