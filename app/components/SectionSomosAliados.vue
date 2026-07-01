@@ -1,6 +1,6 @@
 <template>
     <section
-        class="w-full flex flex-col items-center gap-5 bg-green-dark py-12">
+        class="w-full flex flex-col items-center gap-5 md:gap-6 bg-green-dark py-12">
 
         <div class="w-full flex flex-col items-center gap-5 px-5 sm:px-8 md:px-10 lg:px-16 xxl:px-32">
             <div class="w-full flex flex-col items-center gap-2 text-center">
@@ -54,12 +54,12 @@
                 Sumando hábitos accedés a beneficios de nuestros aliados
             </h3>
 
-            <Carousel :slidesPerView="{ base: 2.3, sm: 3.3, md: 4, lg: 5 }" :gap="8" :showArrows="false"
+            <Carousel :slidesPerView="{ base: 2.3, sm: 3.3, md: 5.6, lg: 5 }" :gap="8" :showArrows="false"
                 :showDots="false">
                 <div v-for="brand in brands" :key="brand.id"
                     class="bg-light rounded-2xl flex items-center justify-center p-3">
                     <NuxtImg v-if="brand.image_url" :src="brand.image_url" :alt="brand.name"
-                        class="w-full h-9 sm:h-12 object-contain" />
+                        class="w-full h-9 sm:h-12 md:h-11 object-contain" />
                     <p v-else class="text-xs font-semibold text-dark text-center leading-tight">{{ brand.name }}</p>
                 </div>
             </Carousel>
