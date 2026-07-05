@@ -1,10 +1,10 @@
 <template>
     <div class="relative w-full" ref="carouselWrapper">
         <button v-if="showArrowsResolved && showLeftArrow" @click="scrollLeft"
-            class="w-12 h-12 flex justify-center items-center absolute z-10 bg-white shadow-md rounded-full"
+            class="w-10 h-10 flex justify-center items-center absolute z-10 bg-accent shadow-md rounded-full"
             :style="leftButtonStyle" :disabled="isAtStart" aria-label="Anterior">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-6 h-6 text-primary fill-current">
-                <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-6 h-6 text-green-dark" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z" stroke="currentColor" fill="currentColor"/>
             </svg>
         </button>
 
@@ -13,17 +13,17 @@
             @mousemove="drag" @mouseup="endDrag" @mouseleave="endDrag" @touchstart="startDrag" @touchmove="drag"
             @touchend="endDrag">
 
-            <div class="carousel-wrapper flex items-end pb-2 px-1 first:mr-4 md:first:mr-0"
+            <div class="carousel-wrapper flex items-end pb-2 px-1"
                 :class="wrapperClass" :style="wrapperStyles">
                 <slot />
             </div>
         </div>
 
         <button v-if="showArrowsResolved && showRightArrow" @click="scrollRight"
-            class="w-12 h-12 flex justify-center items-center absolute z-10 bg-white shadow-md rounded-full"
+            class="w-10 h-10 flex justify-center items-center absolute z-10 bg-accent shadow-md rounded-full"
             :style="rightButtonStyle" :disabled="isAtEnd" aria-label="Siguiente">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-6 h-6 text-primary fill-current">
-                <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-6 h-6 text-green-dark" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" stroke="currentColor" fill="currentColor"/>
             </svg>
         </button>
 

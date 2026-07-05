@@ -12,22 +12,23 @@
       src="/images/gradient-stain.png"
       alt="Mancha gradiente"
       aria-hidden="true"
-      class="absolute z-0 top-64 -right-40 pointer-events-none select-none"
+      class="absolute z-0 top-64 md:-top-20 -right-40 pointer-events-none select-none"
       style="width: 480px; max-width: none; transform: rotate(-20deg)"
     />
     <NuxtImg
       src="/images/gradient-stain.png"
       alt="Mancha gradiente"
       aria-hidden="true"
-      class="hidden absolute z-0 top-2/3 -left-16 pointer-events-none select-none"
-      style="width: 480px; max-width: none; transform: rotate(190deg)"
+      class="hidden md:inline absolute z-0 top-64 lg:top-0 left-40 lg:left-64 pointer-events-none select-none"
+      style="width: 500px; max-width: none; transform: rotate(190deg)"
     />
 
-    <h2 class="relative z-10 font-heading text-lg text-primary text-center leading-1">
+    <h2 class="relative z-10 font-heading text-lg lg:text-2xl text-primary text-center leading-1">
       Lo que dicen quienes ya están sumando
     </h2>
 
-    <div class="relative z-10 w-full max-w-[420px] md:max-w-[688px] flex flex-col items-center gap-3">
+    <!-- Vista móvil y tablet: stack vertical -->
+    <div class="relative z-10 w-full max-w-[420px] md:max-w-[688px] flex flex-col items-center gap-3 lg:hidden">
       <div
         v-for="review in reviews"
         :key="review.name + review.age"
@@ -44,6 +45,34 @@
         </div>
         <p class="text-xs leading-1">"{{ review.quote }}"</p>
       </div>
+    </div>
+
+    <!-- Vista desktop: carousel con 3 reviews -->
+    <div class="hidden lg:block relative z-10 w-full">
+      <Carousel
+        :slidesPerView="{ lg: 3, xl: 3, xxl: 3 }"
+        :gap="{ lg: 12, xl: 16, xxl: 16 }"
+        :showArrows="{ lg: true }"
+        :showDots="false"
+        :buttonPosition="{ top: '50%', transform: 'translateY(-50%)', left: { lg: '-1.5rem' }, right: { lg: '-1.5rem' } }"
+      >
+        <div
+          v-for="review in reviews"
+          :key="review.name + review.age"
+          class="h-[130px] xl:h-28 flex flex-col justify-between gap-1 lg:gap-2 bg-light border border-green-light rounded-lg p-3"
+        >
+          <div class="flex justify-between">
+            <div class="flex items-center gap-3">
+              <div class="w-6 lg:w-7 h-6 lg:h-7 rounded-full bg-gradient-secondary flex items-center justify-center text-light text-xs font-semibold shrink-0">
+                {{ review.name.charAt(0) }}
+              </div>
+              <span class="text-xs lg:text-sm font-semibold">{{ review.name }}, {{ review.age }}</span>
+            </div>
+            <NuxtImg src="/images/brillo-primary.svg" alt="Brillo" aria-hidden="true" class="w-3 lg:w-4 h-3 lg:h-4" />
+          </div>
+          <p class="text-xs lg:text-base leading-1">"{{ review.quote }}"</p>
+        </div>
+      </Carousel>
     </div>
 
   </section>

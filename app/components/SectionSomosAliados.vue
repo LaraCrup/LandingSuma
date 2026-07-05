@@ -1,17 +1,17 @@
 <template>
     <section
-        class="w-full flex flex-col items-center gap-5 md:gap-6 bg-green-dark py-12">
+        class="w-full flex flex-col items-center gap-5 md:gap-6 bg-green-dark py-12 lg:py-16">
 
         <div class="w-full flex flex-col items-center gap-5 px-5 sm:px-8 md:px-10 lg:px-16 xxl:px-32">
-            <div class="w-full flex flex-col items-center gap-2 text-center">
-                <h2 class="text-lg font-heading text-accent font-medium">¿Qué es suma?</h2>
-                <p class="text-xs text-light leading-1">
+            <div class="w-full flex flex-col items-center gap-2 lg:gap-3 text-center">
+                <h2 class="text-lg lg:text-2xl font-heading text-accent font-medium">¿Qué es suma?</h2>
+                <p class="lg:max-w-[720px] text-xs lg:text-base text-light leading-1">
                     <span class="text-accent">suma</span> es una app que te impulsa y motiva a crear hábitos saludables,
                     que premia tu constancia con recompensas de marcas aliadas
                 </p>
             </div>
 
-            <div class="w-full flex flex-col items-center gap-2">
+            <div class="w-full flex flex-col items-center gap-2 lg:gap-3">
                 <button ref="cardRef" @touchstart="handleTouchStart" @touchend="handleTouchEnd"
                     :class="['w-full max-w-[420px] relative overflow-hidden flex justify-between rounded-lg p-3 transition-colors', isCompleted ? 'bg-accent' : 'bg-midlight']">
 
@@ -23,12 +23,12 @@
 
                     <div class="relative flex gap-3 items-center min-w-0 flex-1">
                         <div
-                            class="w-8 h-8 flex flex-shrink-0 items-center justify-center rounded-full bg-gradient-secondary">
-                            <p class="text-md">🏃</p>
+                            class="w-8 lg:w-12 h-8 lg:h-12 flex flex-shrink-0 items-center justify-center rounded-full bg-gradient-secondary">
+                            <p class="text-base lg:text-2xl">🏃</p>
                         </div>
                         <div>
-                            <p class="text-xs text-start truncate text-dark">Correr una carrera</p>
-                            <p class="w-fit text-xs text-green-dark" :class="isCompleted ? 'font-bold' : 'font-normal'">
+                            <p class="text-xs lg:text-base text-start truncate text-dark">Correr una carrera</p>
+                            <p class="w-fit text-xs lg:text-sm text-green-dark lg:mt-1" :class="isCompleted ? 'font-bold' : 'font-normal'">
                                 {{ isCompleted ? 1 : 0 }}/1
                             </p>
                         </div>
@@ -36,28 +36,28 @@
 
                     <div class="relative flex items-center gap-2 flex-shrink-0">
                         <div
-                            :class="['w-6 h-6 flex justify-center items-center rounded-full', isCompleted ? 'bg-green-dark' : 'border-gray border-[1px]']">
+                            :class="['w-6 lg:w-8 h-6 lg:h-8 flex justify-center items-center rounded-full', isCompleted ? 'bg-green-dark' : 'border-gray border-[1px]']">
                             <NuxtImg :src="isCompleted ? '/images/brillo-light-green.svg' : '/images/brillo.svg'"
-                                :alt="isCompleted ? 'Completado' : 'Brillo'" class="w-3" />
+                                :alt="isCompleted ? 'Completado' : 'Brillo'" class="w-3 lg:w-4" />
                         </div>
                     </div>
                 </button>
 
-                <p class="text-light text-xs">Deslizá hacia la derecha &nbsp;→</p>
+                <p class="text-light text-xs lg:text-sm">Deslizá hacia la derecha &nbsp;→</p>
             </div>
         </div>
 
         <NuxtImg src="/images/brillo-accent.svg" alt="Brillo" class="w-5 h-5" />
 
-        <div class="w-full flex flex-col gap-3 pl-5 sm:pl-8 md:pl-10 lg:pl-16 xxl:pl-32">
-            <h3 class="text-lg font-heading text-accent text-center leading-1 pr-5 sm:pr-8 md:pr-10 lg:pr-16 xxl:pr-32">
+        <div class="w-full flex flex-col gap-3 lg:gap-4 lg:px-16 xxl:px-32">
+            <h3 class="text-lg font-heading text-accent text-center leading-1 px-5 sm:px-8 md:px-10 lg:px-0">
                 Sumando hábitos accedés a beneficios de nuestros aliados
             </h3>
 
-            <Carousel :slidesPerView="{ base: 2.3, sm: 3.3, md: 5.6, lg: 5 }" :gap="8" :showArrows="false"
-                :showDots="false">
+            <Carousel :slidesPerView="{ base: 2.3, sm: 3.3, md: 5.6, lg: 7 }" :gap="8" :showArrows="{ base: false, lg: true }"
+                :showDots="false" :buttonPosition="{ top: '50%', transform: 'translateY(-50%)', left: { lg: '-1.5rem' }, right: { lg: '-1.5rem' } }">
                 <div v-for="brand in brands" :key="brand.id"
-                    class="bg-light rounded-2xl flex items-center justify-center p-3">
+                    class="bg-light rounded-2xl flex items-center justify-center p-3 first:ml-5 sm:first:ml-8 md:first:ml-10 lg:first:ml-0 last:mr-5 sm:last:mr-8 md:last:mr-10 lg:last:mr-0">
                     <NuxtImg v-if="brand.image_url" :src="brand.image_url" :alt="brand.name"
                         class="w-full h-9 sm:h-12 md:h-11 object-contain" />
                     <p v-else class="text-xs font-semibold text-dark text-center leading-tight">{{ brand.name }}</p>
