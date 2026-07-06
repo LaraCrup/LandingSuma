@@ -9,6 +9,11 @@ export default defineNuxtConfig({
   ],
   supabase: {
     redirect: false,
+    options: {
+      auth: {
+        persistSession: false,
+      },
+    },
   },
   app: {
     head: {
