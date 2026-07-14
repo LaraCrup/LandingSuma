@@ -3,9 +3,9 @@
     class="px-5 sm:px-8 md:px-10 lg:px-16 xxl:px-32 pt-6 md:pt-8 lg:pt-12">
     <div class="xxl:max-w-[75rem] w-full flex flex-col lg:flex-row items-center justify-between gap-8 lg:gap-12 xxl:mx-auto">
       <div class="w-full lg:w-1/2 flex flex-col items-center lg:items-start justify-center gap-5 md:gap-6 pb-8">
-        <NuxtImg src="/images/brillo-primary.svg" alt="Logo" width="20" height="20" class="lg:hidden" />
+        <NuxtImg src="/images/brillo-primary.svg" alt="" width="20" height="20" class="lg:hidden" />
         <div class="w-full flex flex-col items-center lg:items-start justify-center gap-2 lg:gap-3">
-          <h1 class="text-lg lg:text-[28px] font-heading text-primary font-medium text-center lg:text-left leading-1">La
+          <h1 class="text-lg lg:text-[28px] font-heading text-primary font-medium text-center lg:text-left leading-none">La
             constancia en tu bienestar
             merece recompensas</h1>
           <p class="text-xs lg:text-base text-center lg:text-left">Completá tus datos y retirás tu premio ahora.</p>
@@ -15,22 +15,25 @@
           @submit.prevent="handleSubmit">
 
           <div class="w-full flex flex-col gap-1">
-            <label class="text-xs lg:text-base text-primary">Correo electrónico</label>
-            <input v-model="email" type="email" placeholder="Ingresá tu correo electrónico"
+            <label for="hero-email" class="text-xs lg:text-base text-primary">Correo electrónico</label>
+            <input id="hero-email" v-model="email" type="email" autocomplete="email" placeholder="Ingresá tu correo electrónico"
               :disabled="isLoading"
               class="w-full text-xs lg:text-sm bg-light border border-primary rounded-full px-5 py-3 placeholder:text-gray outline-none focus:ring-2 focus:ring-primary/30 disabled:opacity-50" />
           </div>
 
           <div class="w-full flex flex-col gap-1">
-            <label class="text-xs lg:text-base text-primary">Número de corredor</label>
-            <div class="flex gap-2">
+            <label id="runner-code-label" class="text-xs lg:text-base text-primary">Número de corredor</label>
+            <div class="flex gap-2" role="group" aria-labelledby="runner-code-label">
               <input v-for="(_, i) in runnerCode" :key="i" :ref="el => { if (el) inputs[i] = el as HTMLInputElement }"
                 v-model="runnerCode[i]" type="text" inputmode="numeric" maxlength="1"
+                :aria-label="`Dígito ${i + 1} del número de corredor`"
                 :disabled="isLoading"
                 class="w-10 md:w-full h-10 text-center text-xs bg-light rounded-full border border-primary outline-none focus:ring-2 focus:ring-primary/30 disabled:opacity-50"
                 @input="onDigitInput(i)" @keydown.backspace="onBackspace(i)" />
             </div>
           </div>
+
+          <p v-if="formError" class="text-xs lg:text-sm text-error">{{ formError }}</p>
 
           <button type="submit" :disabled="isLoading"
             class="w-full md:w-fit max-w-64 bg-primary text-light text-xs lg:text-sm rounded-full py-3 px-12 disabled:opacity-50 disabled:cursor-not-allowed">
@@ -46,7 +49,6 @@
       </div>
     </div>
 
-    <!-- Modal de éxito -->
     <Teleport to="body" v-if="showSuccessModal">
       <div class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4 animate-fadeIn">
         <div class="bg-light rounded-2xl shadow-lg p-8 md:p-12 max-w-md w-full text-center animate-scaleIn relative">
@@ -61,8 +63,8 @@
             </div>
           </div>
           <h2 class="text-xl lg:text-2xl font-heading text-primary mb-3">¡Felicidades!</h2>
-          <p class="font-body text-sm lg:text-base mb-4 lg:mb-8 leading-1">
-            ¡Canjea tu premio en el stand de <span class="text-primary">suma</span> y seguí sumando habitos a tu rutina!
+          <p class="font-body text-sm lg:text-base mb-4 lg:mb-8 leading-none">
+            ¡Canjeá tu premio en el stand de <span class="text-primary">suma</span> y seguí sumando hábitos a tu rutina!
           </p>
           <button
             @click="closeSuccessModal"
@@ -86,9 +88,9 @@
               <span class="text-4xl">ℹ️</span>
             </div>
           </div>
-          <h2 class="text-xl lg:text-2xl font-heading text-primary mb-3">Datos no encontrados</h2>
-          <p class="font-body text-sm lg:text-base mb-4 lg:mb-8 leading-1">
-            Tus datos de contacto no figuran en el listado de la carrera. ¡Acercate igualmente al stand de Suma para poder comenzar a sumar habitos!
+          <h2 class="text-xl lg:text-2xl font-heading text-primary mb-3">{{ errorContent[errorType].title }}</h2>
+          <p class="font-body text-sm lg:text-base mb-4 lg:mb-8 leading-none">
+            {{ errorContent[errorType].message }}
           </p>
           <button
             @click="closeErrorModal"
@@ -108,12 +110,30 @@ const email = ref('')
 const runnerCode = ref<string[]>(Array(6).fill(''))
 const inputs = ref<HTMLInputElement[]>([])
 const isLoading = ref(false)
+const formError = ref('')
 const showSuccessModal = ref(false)
 const showErrorModal = ref(false)
 
+const errorContent = {
+  not_found: {
+    title: 'Datos no encontrados',
+    message: 'Tus datos de contacto no figuran en el listado de la carrera. ¡Acercate igualmente al stand de Suma para poder comenzar a sumar hábitos!',
+  },
+  already_redeemed: {
+    title: 'Premio ya canjeado',
+    message: 'Este premio ya fue canjeado anteriormente. Si creés que hubo un error, acercate al stand de Suma.',
+  },
+  error: {
+    title: 'Algo salió mal',
+    message: 'No pudimos validar tus datos. Esperá unos segundos y volvé a intentarlo.',
+  },
+}
+const errorType = ref<keyof typeof errorContent>('not_found')
+
 function onDigitInput(index: number) {
-  const val = runnerCode.value[index]
-  if (val && index < 5) {
+  const digits = (runnerCode.value[index] ?? '').replace(/\D/g, '')
+  runnerCode.value[index] = digits.slice(-1)
+  if (runnerCode.value[index] && index < 5) {
     inputs.value[index + 1]?.focus()
   }
 }
@@ -126,31 +146,39 @@ function onBackspace(index: number) {
 
 async function handleSubmit() {
   const runnerNumber = runnerCode.value.join('')
+  formError.value = ''
 
-  if (!email.value.trim() || !runnerNumber.trim()) {
+  if (!email.value.trim()) {
+    formError.value = 'Ingresá tu correo electrónico.'
+    return
+  }
+
+  if (runnerNumber.length !== 6) {
+    formError.value = 'Completá los 6 dígitos de tu número de corredor.'
     return
   }
 
   isLoading.value = true
 
   try {
-    const { data, error } = await supabase
-      .from('race_participants')
-      .select('id')
-      .eq('email', email.value)
-      .eq('runner_number', runnerNumber)
+    const { data, error } = await supabase.rpc('redeem_prize', {
+      p_email: email.value,
+      p_runner_number: runnerNumber,
+    })
 
     if (error) {
       throw error
     }
 
-    if (data && data.length > 0) {
+    if (data === 'ok') {
       showSuccessModal.value = true
     } else {
+      errorType.value = data === 'already_redeemed' ? 'already_redeemed' : 'not_found'
       showErrorModal.value = true
     }
   } catch (err) {
     console.error('Error validating participant:', err)
+    errorType.value = 'error'
     showErrorModal.value = true
   } finally {
     isLoading.value = false

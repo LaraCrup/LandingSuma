@@ -2,14 +2,14 @@
   <section class="w-full flex flex-col items-center gap-5 lg:gap-6 md:gap-6 px-6 sm:px-8 md:px-10 lg:px-16 xxl:px-32 py-12">
 
     <div class="flex flex-col items-center gap-2 lg:gap-3 text-center">
-      <h2 class="font-heading text-lg lg:text-2xl font-medium leading-1 text-primary">
+      <h2 class="font-heading text-lg lg:text-2xl font-medium leading-none text-primary">
         ¿Por qué descargarte <span class="text-green-dark">suma</span>?
       </h2>
       <p class="text-xs lg:text-base">Pequeños pasos, grandes cambios. Esto es lo que vas a lograr con la app.</p>
     </div>
 
     <template v-for="(beneficio, i) in beneficios" :key="i">
-      <NuxtImg src="/images/brillo-primary.svg" alt="Brillo" class="w-5 h-5 lg:w-8 lg:h-8" />
+      <NuxtImg src="/images/brillo-primary.svg" alt="" class="w-5 h-5 lg:w-8 lg:h-8" />
 
       <div class="flex flex-col items-center gap-2 lg:gap-3 text-center">
         <div class="flex items-center gap-2 lg:gap-4">

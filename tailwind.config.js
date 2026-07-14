@@ -26,9 +26,6 @@ export default {
                 error: "#C24848",
             },
             backgroundImage: {
-                'gradient-primary': 'linear-gradient(to bottom, #D7F560, #157A6E)',
-                'gradient-primary-horizontal': 'linear-gradient(to right, #D7F560, #157A6E)',
-                'gradient-primary-horizontal-reverse': 'linear-gradient(to left, #D7F560, #157A6E)',
                 'gradient-secondary': 'linear-gradient(to right, #12534C, #499F68)',
             }
         }

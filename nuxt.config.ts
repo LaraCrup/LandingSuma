@@ -1,4 +1,3 @@
-// https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
@@ -17,6 +16,16 @@ export default defineNuxtConfig({
   },
   app: {
     head: {
+      htmlAttrs: {
+        lang: 'es',
+      },
+      title: 'suma — La constancia en tu bienestar merece recompensas',
+      meta: [
+        {
+          name: 'description',
+          content: 'suma es una app que te impulsa a crear hábitos saludables y premia tu constancia con recompensas de marcas aliadas. Completá tus datos y canjeá tu premio.',
+        },
+      ],
       link: [
         {
           rel: 'preconnect',

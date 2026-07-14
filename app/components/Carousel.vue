@@ -1,5 +1,5 @@
 <template>
-    <div class="relative w-full" ref="carouselWrapper">
+    <div class="relative w-full">
         <button v-if="showArrowsResolved && showLeftArrow" @click="scrollLeft"
             class="w-10 h-10 flex justify-center items-center absolute z-10 bg-accent shadow-md rounded-full"
             :style="leftButtonStyle" :disabled="isAtStart" aria-label="Anterior">
@@ -170,7 +170,6 @@ const updateBreakpoint = () => {
     else if (width >= 1280) newBreakpoint = 'xl'
     else if (width >= 1080) newBreakpoint = 'lg'
     else if (width >= 768) newBreakpoint = 'md'
-    else if (width >= 600) newBreakpoint = 'tab'
     else if (width >= 480) newBreakpoint = 'sm'
     if (currentBreakpoint.value !== newBreakpoint) {
         currentBreakpoint.value = newBreakpoint
@@ -238,22 +237,6 @@ const scrollLeft = () => {
 
 const scrollRight = () => {
     container.value?.scrollBy({ left: scrollAmount.value, behavior: props.scrollBehavior })
-}
-
-const scrollToSlide = (slideIndex) => {
-    if (!container.value) return
-    const effectiveWidth = containerWidth.value - 8
-    const totalGapsWidth = (slidesVisibleDecimal.value - 1) * responsiveGap.value
-    const slideWidth = (effectiveWidth - totalGapsWidth) / slidesVisibleDecimal.value
-    container.value.scrollTo({ left: (slideWidth + responsiveGap.value) * slideIndex, behavior: props.scrollBehavior })
-}
-
-const getCurrentSlideIndex = () => {
-    if (!container.value) return 0
-    const effectiveWidth = containerWidth.value - 8
-    const totalGapsWidth = (slidesVisibleDecimal.value - 1) * responsiveGap.value
-    const slideWidth = (effectiveWidth - totalGapsWidth) / slidesVisibleDecimal.value
-    return Math.round(container.value.scrollLeft / (slideWidth + responsiveGap.value))
 }
 
 const getPoint = (e) => {
@@ -417,7 +400,6 @@ onUnmounted(() => {
     mutationObserver?.disconnect()
 })
 
-defineExpose({ scrollLeft, scrollRight, scrollToSlide, getCurrentSlideIndex, updateArrows, setupChildrenClasses })
 </script>
 
 <style scoped>

@@ -5,7 +5,7 @@
             <div class="w-full flex flex-col items-center gap-5 px-5 sm:px-8 md:px-10 lg:px-16 xxl:px-32">
                 <div class="w-full flex flex-col items-center gap-2 lg:gap-3 text-center">
                     <h2 class="text-lg lg:text-2xl font-heading text-accent font-medium">¿Qué es suma?</h2>
-                    <p class="lg:max-w-[720px] xxl:max-w-full text-xs lg:text-base text-light leading-1">
+                    <p class="lg:max-w-[720px] xxl:max-w-full text-xs lg:text-base text-light leading-none">
                         <span class="text-accent">suma</span> es una app que te impulsa y motiva a crear hábitos
                         saludables,
                         que premia tu constancia con recompensas de marcas aliadas
@@ -16,7 +16,6 @@
                     <button ref="cardRef" @touchstart="handleTouchStart" @touchend="handleTouchEnd"
                         :class="['w-full max-w-[420px] relative overflow-hidden flex justify-between rounded-lg p-3 transition-colors', isCompleted ? 'bg-accent' : 'bg-midlight']">
 
-                        <!-- swipe fill overlay -->
                         <div v-if="showSwipeFill" class="absolute inset-y-0 pointer-events-none" :class="[
                             swipeDirection === 'right' ? 'left-0 bg-accent' : 'right-0 bg-midlight',
                             pendingDirection ? 'transition-[width] duration-150' : ''
@@ -40,7 +39,7 @@
                             <div
                                 :class="['w-6 lg:w-8 h-6 lg:h-8 flex justify-center items-center rounded-full', isCompleted ? 'bg-green-dark' : 'border-gray border-[1px]']">
                                 <NuxtImg :src="isCompleted ? '/images/brillo-light-green.svg' : '/images/brillo.svg'"
-                                    :alt="isCompleted ? 'Completado' : 'Brillo'" class="w-3 lg:w-4" />
+                                    alt="" class="w-3 lg:w-4" />
                             </div>
                         </div>
                     </button>
@@ -49,10 +48,10 @@
                 </div>
             </div>
 
-            <NuxtImg src="/images/brillo-accent.svg" alt="Brillo" class="w-5 lg:w-8 h-5 lg:h-8" />
+            <NuxtImg src="/images/brillo-accent.svg" alt="" class="w-5 lg:w-8 h-5 lg:h-8" />
 
             <div class="w-full flex flex-col gap-3 lg:gap-4 lg:px-16 xxl:px-0">
-                <h3 class="text-lg font-heading text-accent text-center leading-1 px-5 sm:px-8 md:px-10 lg:px-0">
+                <h3 class="text-lg font-heading text-accent text-center leading-none px-5 sm:px-8 md:px-10 lg:px-0">
                     Sumando hábitos accedés a beneficios de nuestros aliados
                 </h3>
 

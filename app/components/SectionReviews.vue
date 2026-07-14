@@ -2,18 +2,18 @@
   <section
     class="relative px-5 sm:px-8 md:px-10 lg:px-16 xxl:px-32 py-12 overflow-hidden">
 
-    <NuxtImg src="/images/gradient-stain.png" alt="Mancha gradiente" aria-hidden="true"
+    <NuxtImg src="/images/gradient-stain.png" alt="" aria-hidden="true"
       class="absolute z-0 -top-4 xxl:-top-28 -left-48 xxl:left-40 pointer-events-none select-none"
       style="width: 480px; max-width: none; transform: rotate(120deg)" />
-    <NuxtImg src="/images/gradient-stain.png" alt="Mancha gradiente" aria-hidden="true"
+    <NuxtImg src="/images/gradient-stain.png" alt="" aria-hidden="true"
       class="absolute z-0 top-64 md:-top-20 -right-40 xxl:right-40 pointer-events-none select-none"
       style="width: 480px; max-width: none; transform: rotate(-20deg)" />
-    <NuxtImg src="/images/gradient-stain.png" alt="Mancha gradiente" aria-hidden="true"
+    <NuxtImg src="/images/gradient-stain.png" alt="" aria-hidden="true"
       class="hidden md:inline absolute z-0 top-64 lg:top-0 xxl:-top-6 left-40 lg:left-64 xxl:left-1/3 pointer-events-none select-none"
       style="width: 500px; max-width: none; transform: rotate(190deg)" />
 
     <div class="xxl:max-w-[75rem] w-full flex flex-col items-center gap-5 md:gap-6 xxl:mx-auto">
-      <h2 class="relative z-10 font-heading text-lg lg:text-2xl text-primary text-center leading-1">
+      <h2 class="relative z-10 font-heading text-lg lg:text-2xl text-primary text-center leading-none">
         Lo que dicen quienes ya están sumando
       </h2>
 
@@ -28,9 +28,9 @@
               </div>
               <span class="text-xs font-semibold">{{ review.name }}, {{ review.age }}</span>
             </div>
-            <NuxtImg src="/images/brillo-primary.svg" alt="Brillo" aria-hidden="true" class="w-3 h-3" />
+            <NuxtImg src="/images/brillo-primary.svg" alt="" aria-hidden="true" class="w-3 h-3" />
           </div>
-          <p class="text-xs leading-1">"{{ review.quote }}"</p>
+          <p class="text-xs leading-none">"{{ review.quote }}"</p>
         </div>
       </div>
 
@@ -48,9 +48,9 @@
                 </div>
                 <span class="text-xs lg:text-sm font-semibold">{{ review.name }}, {{ review.age }}</span>
               </div>
-              <NuxtImg src="/images/brillo-primary.svg" alt="Brillo" aria-hidden="true" class="w-3 lg:w-4 h-3 lg:h-4" />
+              <NuxtImg src="/images/brillo-primary.svg" alt="" aria-hidden="true" class="w-3 lg:w-4 h-3 lg:h-4" />
             </div>
-            <p class="text-xs lg:text-base leading-1">"{{ review.quote }}"</p>
+            <p class="text-xs lg:text-base leading-none">"{{ review.quote }}"</p>
           </div>
         </Carousel>
       </div>

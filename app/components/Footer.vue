@@ -3,15 +3,15 @@
     <div class="w-full p-5 sm:px-8 md:px-10 lg:px-16 lg:py-9 xxl:px-32 ">
       <div class="xxl:max-w-[75rem] w-full flex flex-col items-end gap-2 xxl:mx-auto">
         <div class="w-full flex items-center justify-between">
-          <NuxtImg src="/images/isotipo.svg" alt="Logo" class="h-6 lg:h-8" />
+          <NuxtImg src="/images/isotipo.svg" alt="suma" class="h-6 lg:h-8" />
           <NuxtLink to="#" class="flex items-center gap-2">
             <p class="text-xs lg:text-sm text-green-dark">Descargar suma</p>
-            <NuxtImg src="/images/download-dark.svg" alt="Logo" class="w-[10px] lg:w-[14px] h-[10px] lg:h-[14px]" />
+            <NuxtImg src="/images/download-dark.svg" alt="" class="w-[10px] lg:w-[14px] h-[10px] lg:h-[14px]" />
           </NuxtLink>
         </div>
         <div class="flex items-center gap-2">
-          <NuxtImg src="/images/instagram.svg" alt="Logo" width="20" height="20" />
-          <NuxtImg src="/images/tiktok.svg" alt="Logo" width="20" height="20" />
+          <NuxtImg src="/images/instagram.svg" alt="Instagram" width="20" height="20" />
+          <NuxtImg src="/images/tiktok.svg" alt="TikTok" width="20" height="20" />
         </div>
       </div>
     </div>
