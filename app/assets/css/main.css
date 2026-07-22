@@ -1,0 +1,36 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Quicksand", system-ui, sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: "Montserrat Alternates", system-ui, sans-serif;
+}
+
+html {
+    scrollbar-gutter: stable;
+}
+
+html,
+body {
+    height: 100%;
+    scroll-behavior: smooth;
+    background-color: #F3FCF7;
+    color: #131815;
+    -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+    background-color: #D7F560;
+    color: #12534C;
+}
+
+html.custom-cursor,
+html.custom-cursor * {
+    cursor: none !important;
+}

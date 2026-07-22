@@ -6,6 +6,12 @@ export default defineNuxtConfig({
     '@nuxtjs/supabase',
     '@nuxt/image',
   ],
+  css: ['~/assets/css/main.css'],
+  vite: {
+    optimizeDeps: {
+      include: ['gsap', 'gsap/ScrollTrigger', 'gsap/SplitText', 'lenis'],
+    },
+  },
   supabase: {
     redirect: false,
     options: {
@@ -25,6 +31,12 @@ export default defineNuxtConfig({
           name: 'description',
           content: 'suma es una app que te impulsa a crear hábitos saludables y premia tu constancia con recompensas de marcas aliadas. Completá tus datos y canjeá tu premio.',
         },
+        { property: 'og:title', content: 'suma — La constancia en tu bienestar merece recompensas' },
+        {
+          property: 'og:description',
+          content: 'Creá hábitos saludables y canjeá recompensas de marcas aliadas.',
+        },
+        { name: 'theme-color', content: '#12534C' },
       ],
       link: [
         {
@@ -38,7 +50,7 @@ export default defineNuxtConfig({
         },
         {
           rel: 'stylesheet',
-          href: 'https://fonts.googleapis.com/css2?family=Montserrat+Alternates:wght@600;700&family=Quicksand:wght@400;500;600;700&display=swap',
+          href: 'https://fonts.googleapis.com/css2?family=Montserrat+Alternates:wght@500;600;700&family=Quicksand:wght@400;500;600;700&display=swap',
         },
       ],
     },
