@@ -1,27 +1,25 @@
 <template>
   <div
-    class="rasca-card flex flex-col bg-white border border-primary/10 rounded-[28px] overflow-hidden shadow-[0_24px_50px_-30px_rgba(18,83,76,0.55)]">
+    class="rasca-card flex flex-col bg-light border border-primary/20 rounded-[28px] overflow-hidden shadow-[0_24px_50px_-30px_rgba(18,83,76,0.55)]">
     <div class="w-full relative overflow-hidden">
-      <div class="w-full aspect-[4/3] flex flex-col items-center justify-center gap-2.5 bg-gradient-to-b from-midlight to-white p-6">
-        <div class="w-16 h-16 flex items-center justify-center rounded-2xl bg-gradient-secondary text-3xl shadow-[0_8px_20px_-8px_rgba(18,83,76,0.5)]">
-          {{ premio.emoji }}
+      <div class="w-full aspect-[16/9] flex flex-col items-center justify-center gap-3 bg-gradient-secondary p-5">
+        <div class="w-[130px] h-16 flex items-center justify-center bg-light rounded-2xl shadow-[0_8px_20px_-8px_rgba(18,83,76,0.5)] px-4">
+          <NuxtImg :src="premio.marca.logo" :alt="premio.marca.nombre" class="max-w-full max-h-11 object-contain" />
         </div>
-        <p class="min-h-[2lh] font-heading text-2xl text-green-dark font-bold text-center leading-tight">{{ premio.nombre }}</p>
-        <p class="min-h-[2lh] text-base text-dark/75 text-center leading-snug">{{ premio.detalle }}</p>
+        <p class="min-h-[2lh] font-heading text-xl text-light font-bold text-center leading-tight">{{ premio.nombre }}</p>
       </div>
       <canvas ref="canvas"
         class="absolute inset-0 w-full h-full touch-pan-y cursor-grab active:cursor-grabbing"
         :class="revelado ? 'pointer-events-none' : ''" />
     </div>
 
-    <div class="flex items-center justify-between border-t border-primary/8 px-4 py-3.5">
-      <span class="flex items-center gap-1.5 text-base text-green-dark font-semibold">
-        <span class="w-7 h-7 flex items-center justify-center bg-green-dark rounded-full text-sm">🔥</span>
-        {{ premio.requisito }}
-      </span>
-      <Transition name="listo">
+    <div class="h-[62px] flex items-center justify-center border-t border-primary/10 px-4">
+      <Transition name="listo" mode="out-in">
         <span v-if="revelado" class="flex items-center gap-1 bg-accent rounded-full text-xs text-green-dark font-bold px-3 py-1.5">
           ✓ Desbloqueado
+        </span>
+        <span v-else class="text-base text-green-dark font-semibold">
+          {{ premio.requisito }}
         </span>
       </Transition>
     </div>
@@ -38,6 +36,7 @@ const props = defineProps({
 const BRUSH = 34
 const canvas = ref(null)
 const revelado = ref(false)
+let logoImg = null
 
 function pintarFoil() {
   const el = canvas.value
@@ -50,19 +49,20 @@ function pintarFoil() {
   const ctx2d = el.getContext('2d', { willReadFrequently: true })
   ctx2d.setTransform(dpr, 0, 0, dpr, 0, 0)
 
-  const marca = props.premio.marca
   const cx = rect.width / 2
   const cy = rect.height / 2 - 16
 
+  // El contenido debajo ahora es el gradiente verde de marca: el foil va en gris plata
+  // para que se distinga y se lea como "raspable".
   const foil = ctx2d.createLinearGradient(0, 0, rect.width, rect.height)
-  foil.addColorStop(0, '#1c6b62')
-  foil.addColorStop(0.45, '#2f8a7d')
-  foil.addColorStop(0.55, '#3fa08f')
-  foil.addColorStop(1, '#12534C')
+  foil.addColorStop(0, '#9fb3ab')
+  foil.addColorStop(0.45, '#c3d3cb')
+  foil.addColorStop(0.55, '#d5e2da')
+  foil.addColorStop(1, '#93a9a1')
   ctx2d.fillStyle = foil
   ctx2d.fillRect(0, 0, rect.width, rect.height)
 
-  ctx2d.fillStyle = 'rgba(255,255,255,0.06)'
+  ctx2d.fillStyle = 'rgba(18,83,76,0.07)'
   for (let x = 6; x < rect.width; x += 14) {
     for (let y = 6; y < rect.height; y += 14) {
       ctx2d.beginPath()
@@ -71,29 +71,22 @@ function pintarFoil() {
     }
   }
 
-  const r = 30
-  ctx2d.strokeStyle = 'rgba(255,255,255,0.35)'
-  ctx2d.lineWidth = 2
-  ctx2d.beginPath()
-  ctx2d.arc(cx, cy, r + 7, 0, Math.PI * 2)
-  ctx2d.stroke()
-
-  ctx2d.fillStyle = 'rgba(243,252,247,0.95)'
-  ctx2d.beginPath()
-  ctx2d.arc(cx, cy, r, 0, Math.PI * 2)
-  ctx2d.fill()
-
   ctx2d.textAlign = 'center'
   ctx2d.textBaseline = 'middle'
-  ctx2d.fillStyle = '#12534C'
-  ctx2d.font = '600 28px "Montserrat Alternates", sans-serif'
-  ctx2d.fillText(marca.inicial, cx, cy + 2)
-
-  ctx2d.fillStyle = 'rgba(243,252,247,0.95)'
+  ctx2d.fillStyle = 'rgba(18,83,76,0.85)'
   ctx2d.font = '700 20px Quicksand, sans-serif'
-  ctx2d.fillText(marca.nombre, cx, cy + r + 30)
-
+  ctx2d.fillText('Rascá acá', cx, cy + 46)
   ctx2d.textBaseline = 'alphabetic'
+
+  if (logoImg?.complete && logoImg.naturalWidth) {
+    const max = 96
+    const escala = Math.min(max / logoImg.naturalWidth, 52 / logoImg.naturalHeight)
+    const w = logoImg.naturalWidth * escala
+    const h = logoImg.naturalHeight * escala
+    ctx2d.globalAlpha = 0.55
+    ctx2d.drawImage(logoImg, cx - w / 2, cy - h / 2, w, h)
+    ctx2d.globalAlpha = 1
+  }
 }
 
 let cleanup = null
@@ -170,6 +163,13 @@ onMounted(() => {
   conectarRasca()
   const repintar = () => { if (!revelado.value) pintarFoil() }
   document.fonts.ready.then(() => requestAnimationFrame(repintar))
+
+  // El logo se dibuja en el canvas: hay que repintar cuando termina de cargar,
+  // igual que con las fuentes, o el foil queda sin marca.
+  logoImg = new Image()
+  logoImg.onload = () => requestAnimationFrame(repintar)
+  logoImg.src = props.premio.marca.logo
+
   ro = new ResizeObserver(() => requestAnimationFrame(repintar))
   if (canvas.value) ro.observe(canvas.value)
 })
@@ -185,7 +185,12 @@ onBeforeUnmount(() => {
   transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s ease;
 }
 
-.listo-enter-from {
+.listo-leave-active {
+  transition: opacity 0.15s ease;
+}
+
+.listo-enter-from,
+.listo-leave-to {
   transform: scale(0.5);
   opacity: 0;
 }

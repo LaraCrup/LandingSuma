@@ -18,7 +18,7 @@
           <h1 ref="titleRef"
             class="font-heading text-3xl sm:text-4xl xl:text-5xl xxl:short:text-5xl text-green-dark font-medium leading-tight text-center lg:text-left">
             La constancia en tu bienestar merece
-            <span class="highlight relative text-primary">recompensas</span>
+            <span class="text-primary">recompensas</span>
           </h1>
           <p class="col-in max-w-[42ch] text-lg lg:text-xl text-green-dark font-semibold text-center lg:text-left">
             Completá tus datos y retirá tu premio ahora.
@@ -192,18 +192,3 @@ useGsapContext(root, (ctx) => {
   ctx.add(() => () => window.removeEventListener('resize', alCambiarViewport))
 })
 </script>
-
-<style scoped>
-.highlight::after {
-  content: '';
-  position: absolute;
-  left: -0.5em;
-  right: -0.5em;
-  bottom: 0.15em;
-  height: 0.8em;
-  background: #D7F560;
-  border-radius: 999px;
-  transform: rotate(-1.5deg);
-  z-index: -1;
-}
-</style>

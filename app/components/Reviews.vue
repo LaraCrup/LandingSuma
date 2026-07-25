@@ -2,34 +2,18 @@
   <section ref="root" class="w-full relative bg-light overflow-hidden py-14 lg:py-24">
     <div class="w-full flex flex-col items-center gap-8 lg:gap-12">
       <div class="flex flex-col items-center gap-3 text-center px-5 sm:px-8">
-        <h2 ref="titleRef" class="font-heading text-2xl lg:text-4xl text-primary font-bold leading-tight">
+        <h2 ref="titleRef" class="font-heading text-2xl lg:text-4xl text-primary font-medium leading-tight">
           Lo que dicen quienes ya están sumando
         </h2>
       </div>
 
-      <CarouselStatic :gap="16" :slides-per-view="{ base: 1.3, sm: 1.8, tab: 2.2, md: 2.6 }" class="w-full mdlg:hidden">
-        <div v-for="review in reviews" :key="review.name"
-          class="h-40 flex flex-col justify-between bg-white border border-green-light/40 rounded-3xl p-5">
-          <p class="text-base text-dark/85 leading-snug line-clamp-3">"{{ review.quote }}"</p>
-          <div class="flex justify-between items-center">
-            <div class="flex items-center gap-2.5">
-              <div class="w-8 h-8 flex flex-shrink-0 items-center justify-center rounded-full bg-gradient-secondary text-light text-sm font-semibold">
-                {{ review.name.charAt(0) }}
-              </div>
-              <span class="text-sm text-green-dark font-semibold">{{ review.name }}, {{ review.age }}</span>
-            </div>
-            <NuxtImg src="/images/brillo-primary.svg" alt="" class="w-4 h-4" />
-          </div>
-        </div>
-      </CarouselStatic>
-
-      <div class="w-full hidden mdlg:flex flex-col gap-5">
+      <div class="w-full flex flex-col gap-4 mdlg:gap-5">
         <MarqueeReactive :items="filaA" :speed="45" separator="" copy-class="gap-5 pr-5"
           aria-label="Reseñas de usuarios de suma"
           style="mask-image: linear-gradient(to right, transparent, black 6%, black 94%, transparent)">
           <template #item="{ item }">
-            <div class="w-[360px] h-44 flex flex-col justify-between bg-white border border-green-light/40 rounded-3xl p-5">
-              <p class="text-lg text-dark/85 leading-snug line-clamp-3">"{{ item.quote }}"</p>
+            <div class="w-[280px] mdlg:w-[360px] h-40 mdlg:h-44 flex flex-col justify-between bg-light border border-green-light/40 rounded-3xl p-5">
+              <p class="text-base mdlg:text-lg text-dark/85 leading-snug line-clamp-3">"{{ item.quote }}"</p>
               <div class="flex justify-between items-center">
                 <div class="flex items-center gap-2.5">
                   <div class="w-8 h-8 flex flex-shrink-0 items-center justify-center rounded-full bg-gradient-secondary text-light text-sm font-semibold">
@@ -47,8 +31,8 @@
           aria-label="Más reseñas de usuarios de suma"
           style="mask-image: linear-gradient(to right, transparent, black 6%, black 94%, transparent)">
           <template #item="{ item }">
-            <div class="w-[360px] h-44 flex flex-col justify-between bg-midlight rounded-3xl p-5">
-              <p class="text-lg text-dark/85 leading-snug line-clamp-3">"{{ item.quote }}"</p>
+            <div class="w-[280px] mdlg:w-[360px] h-40 mdlg:h-44 flex flex-col justify-between bg-midlight rounded-3xl p-5">
+              <p class="text-base mdlg:text-lg text-dark/85 leading-snug line-clamp-3">"{{ item.quote }}"</p>
               <div class="flex justify-between items-center">
                 <div class="flex items-center gap-2.5">
                   <div class="w-8 h-8 flex flex-shrink-0 items-center justify-center rounded-full bg-gradient-secondary text-light text-sm font-semibold">

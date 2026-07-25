@@ -1,7 +1,7 @@
 <template>
   <div class="w-full relative">
     <button v-if="arrows && !isAtStart" @click="scrollPrev" aria-label="Anterior"
-      class="w-11 h-11 hidden md:flex justify-center items-center absolute top-1/2 left-0 lg:-left-5 z-10 -translate-y-1/2 bg-white hover:bg-accent rounded-full text-primary text-2xl shadow-[0_10px_24px_-12px_rgba(18,83,76,0.6)] transition-colors duration-200">
+      class="w-11 h-11 hidden md:flex justify-center items-center absolute top-1/2 left-0 lg:-left-5 z-10 -translate-y-1/2 bg-light hover:bg-accent rounded-full text-primary text-2xl shadow-[0_10px_24px_-12px_rgba(18,83,76,0.6)] transition-colors duration-200">
       ‹
     </button>
 
@@ -13,7 +13,7 @@
     </div>
 
     <button v-if="arrows && !isAtEnd" @click="scrollNext" aria-label="Siguiente"
-      class="w-11 h-11 hidden md:flex justify-center items-center absolute top-1/2 right-0 lg:-right-5 z-10 -translate-y-1/2 bg-white hover:bg-accent rounded-full text-primary text-2xl shadow-[0_10px_24px_-12px_rgba(18,83,76,0.6)] transition-colors duration-200">
+      class="w-11 h-11 hidden md:flex justify-center items-center absolute top-1/2 right-0 lg:-right-5 z-10 -translate-y-1/2 bg-light hover:bg-accent rounded-full text-primary text-2xl shadow-[0_10px_24px_-12px_rgba(18,83,76,0.6)] transition-colors duration-200">
       ›
     </button>
   </div>

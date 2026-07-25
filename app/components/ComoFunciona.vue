@@ -18,10 +18,12 @@
         <ul class="flex justify-center items-center gap-3 order-2 lg:hidden">
           <li v-for="(p, i) in pasos" :key="i">
             <button @click="activo = i" :aria-current="activo === i" :aria-label="p.titulo"
-              :class="['w-14 h-14 short:w-12 short:h-12 flex justify-center items-center border rounded-full font-heading text-xl short:text-lg font-medium tabular-nums transition-all duration-300',
+              :class="['w-14 h-14 short:w-12 short:h-12 flex justify-center items-center border border-transparent rounded-full font-heading text-xl short:text-lg font-medium tabular-nums transition-all duration-300',
                 activo === i
-                  ? 'border-accent/50 bg-gradient-to-br from-accent/70 via-accent/40 to-green-light/25 text-green-dark shadow-[0_16px_34px_-24px_rgba(18,83,76,0.5)]'
-                  : 'border-transparent bg-white text-primary hover:bg-white/80']">
+                  ? 'bg-green-dark text-accent shadow-[0_16px_34px_-24px_rgba(18,83,76,0.5)]'
+                  : i < activo
+                    ? 'bg-green-dark/45 text-accent'
+                    : 'bg-light text-primary hover:bg-light/80']">
               0{{ i + 1 }}
             </button>
           </li>
@@ -38,12 +40,16 @@
           <li v-for="(p, i) in pasos" :key="i" :ref="el => { if (el) pasoEls[i] = el }">
             <button @click="activo = i" :aria-current="activo === i" :class="['w-full flex items-center gap-4 lg:gap-5 border rounded-2xl transition-all duration-300 px-4 lg:px-5 py-8 lg:py-10 short:py-8',
               activo === i
-                ? 'border-accent/50 bg-gradient-to-br from-accent/70 via-accent/40 to-green-light/25 shadow-[0_16px_34px_-24px_rgba(18,83,76,0.5)]'
-                : 'border-transparent bg-white hover:bg-white/80']">
-              <span class="font-heading text-2xl text-primary font-medium leading-none tabular-nums">
+                ? 'border-transparent bg-green-dark shadow-[0_16px_34px_-24px_rgba(18,83,76,0.5)]'
+                : i < activo
+                  ? 'border-transparent bg-green-dark/45'
+                  : 'border-transparent bg-light hover:bg-light/80']">
+              <span :class="['font-heading text-2xl font-medium leading-none tabular-nums',
+                i <= activo ? 'text-accent' : 'text-primary']">
                 0{{ i + 1 }}
               </span>
-              <span class="font-heading text-lg lg:text-xl text-green-dark font-semibold">
+              <span :class="['font-heading text-lg lg:text-xl font-semibold',
+                i <= activo ? 'text-light' : 'text-green-dark']">
                 {{ p.titulo }}
               </span>
             </button>
@@ -63,7 +69,7 @@
                   class="w-full border border-gray/60 rounded-xl text-sm font-semibold outline-none focus:border-primary px-3.5 py-3" />
                 <div class="flex justify-center gap-3">
                   <button v-for="emoji in emojis" :key="emoji" @click="nuevoEmoji = emoji" :class="['w-9 h-9 flex items-center justify-center rounded-full text-base transition-colors duration-150',
-                    nuevoEmoji === emoji ? 'bg-accent' : 'bg-white']">
+                    nuevoEmoji === emoji ? 'bg-accent' : 'bg-light']">
                     {{ emoji }}
                   </button>
                 </div>
@@ -75,7 +81,7 @@
 
               <template v-else-if="activo === 1">
                 <p class="font-heading text-base text-green-dark font-semibold">Mis hábitos</p>
-                <HabitCard v-for="habito in habitos" :key="habito.name" :habit="habito" v-model="habito.done"
+                <HabitCard v-for="habito in habitosVisibles" :key="habito.name" :habit="habito" v-model="habito.done"
                   @completed="onCompletado" />
               </template>
 
@@ -94,8 +100,8 @@
                       class="flex flex-col items-center gap-1.5">
                       <span class="text-[11px] text-light/50">{{ d }}</span>
                       <div
-                        :class="['w-6 h-6 flex items-center justify-center rounded-full transition-colors duration-300', i < diasRacha ? 'bg-accent' : 'border border-light/25']">
-                        <NuxtImg v-if="i < diasRacha" src="/images/brillo.svg" alt="" class="w-3" />
+                        :class="['w-5 h-5 lg:w-6 lg:h-6 flex items-center justify-center rounded-full transition-colors duration-300', i < diasRacha ? 'bg-accent' : 'border border-light/25']">
+                        <NuxtImg v-if="i < diasRacha" src="/images/brillo.svg" alt="" class="w-2.5 lg:w-3" />
                       </div>
                     </div>
                   </div>
@@ -117,15 +123,15 @@
                 </div>
                 <button v-for="premio in premios.slice(0, 2)" :key="premio.nombre" @click="canjear(premio)"
                   :disabled="puntos < premio.pts || canjeados.includes(premio.nombre)"
-                  :class="['w-full flex justify-between items-center bg-white rounded-2xl transition-all duration-200 active:scale-[0.98] p-4 short:p-3',
+                  :class="['w-full flex flex-col gap-2.5 bg-light rounded-2xl transition-all duration-200 active:scale-[0.98] p-4 short:p-3',
                     puntos < premio.pts || canjeados.includes(premio.nombre) ? 'opacity-45' : 'hover:shadow-[0_10px_24px_-14px_rgba(18,83,76,0.5)]']">
-                  <div class="min-w-0 flex flex-1 items-center gap-3">
+                  <div class="w-full min-w-0 flex items-center gap-3">
                     <div class="w-10 h-10 short:w-9 short:h-9 flex flex-shrink-0 items-center justify-center rounded-full bg-gradient-secondary text-lg">
                       {{ premio.emoji }}
                     </div>
-                    <p class="text-sm text-dark font-semibold text-left truncate">{{ premio.nombre }}</p>
+                    <p class="min-w-0 flex-1 text-sm text-dark font-semibold text-left">{{ premio.nombre }}</p>
                   </div>
-                  <span :class="['flex-shrink-0 rounded-full text-xs font-bold whitespace-nowrap px-3 py-1', puntos >= premio.pts ? 'bg-accent text-green-dark' : 'bg-midlight text-green-dark']">
+                  <span :class="['w-full rounded-full text-xs font-bold text-center whitespace-nowrap px-3 py-2', puntos >= premio.pts ? 'bg-accent text-green-dark' : 'bg-midlight text-green-dark']">
                     {{ canjeados.includes(premio.nombre) ? '✓ Canjeado' : puntos >= premio.pts ? 'Canjear' : premio.pts + ' pts' }}
                   </span>
                 </button>
@@ -167,8 +173,12 @@ const RACHA_BASE = 5
 const PUNTOS_BASE = 280
 const PUNTOS_POR_HABITO = 40
 
-const completados = computed(() => habitos.value.filter(h => h.done).length)
-const todosHechos = computed(() => completados.value === habitos.value.length)
+// Tras crear el hábito, el paso 2 muestra solo ese (el último pusheado). Si el usuario
+// saltó directo al paso 2 sin crear nada, mostramos los de ejemplo para que no quede vacío.
+const habitosVisibles = computed(() => creado.value ? habitos.value.slice(-1) : habitos.value)
+
+const completados = computed(() => habitosVisibles.value.filter(h => h.done).length)
+const todosHechos = computed(() => completados.value === habitosVisibles.value.length)
 const diasRacha = computed(() => RACHA_BASE + (todosHechos.value ? 1 : 0))
 const puntos = computed(() => PUNTOS_BASE + completados.value * PUNTOS_POR_HABITO)
 const xp = computed(() => 210 + completados.value * 30)

@@ -8,7 +8,7 @@
     <div class="w-full max-w-[75rem] flex flex-col items-center gap-8 lg:gap-14 relative z-[1] text-center px-5 sm:px-8 pt-20 lg:pt-32 mx-auto">
       <h2 ref="titleRef"
         class="font-heading text-[17vw] lg:text-[10rem] xxl:text-[12rem] text-light font-medium leading-[0.95] tracking-tight">
-        suma<span class="text-accent">.</span>
+        suma
       </h2>
 
       <NuxtLink to="https://suma-proyecto-final.vercel.app/iniciar-sesion" target="_blank" rel="noopener"
@@ -18,7 +18,7 @@
       </NuxtLink>
     </div>
 
-    <div class="w-full border-t border-light/10 mt-16 lg:mt-24 px-5 py-4 relative z-[1]">
+    <div class="w-full border-t border-light/10 mt-16 lg:mt-24 px-5 pt-5 pb-8 lg:pb-10 relative z-[1]">
       <div class="w-full max-w-[75rem] flex flex-col sm:flex-row justify-between items-center gap-2 mx-auto">
         <div class="flex items-center gap-2.5 order-2 sm:order-1">
           <NuxtImg src="/images/isotipo.svg" alt="suma" class="h-6" />

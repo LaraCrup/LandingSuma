@@ -2,14 +2,14 @@
   <section ref="root" class="w-full relative bg-midlight overflow-hidden py-14 lg:py-24">
     <div class="xxl:max-w-[75rem] w-full flex flex-col items-center gap-8 lg:gap-12 xxl:mx-auto">
       <div class="flex flex-col items-center text-center px-5 sm:px-8 md:px-10 lg:px-16 xxl:px-32">
-        <h2 ref="titleRef" class="max-w-[20ch] font-heading text-3xl lg:text-5xl text-primary font-bold leading-[1.05]">
+        <h2 ref="titleRef" class="max-w-[20ch] font-heading text-3xl lg:text-5xl text-primary font-medium leading-[1.05]">
           Rascá tu racha y descubrí el beneficio
         </h2>
       </div>
 
-      <CarouselStatic arrows :gap="20" :slides-per-view="{ base: 1.3, sm: 1.8, tab: 2.2, md: 2.6 }" track-class="pb-7" class="w-full mdlg:hidden">
+      <div class="w-full flex flex-col gap-6 mdlg:hidden px-5 sm:px-8 md:px-10">
         <RascaCard v-for="premio in premios" :key="premio.nombre" :premio="premio" />
-      </CarouselStatic>
+      </div>
 
       <div class="w-full hidden mdlg:grid grid-cols-3 gap-7 px-5 sm:px-8 md:px-10 lg:px-16 xxl:px-32">
         <RascaCard v-for="premio in premios" :key="premio.nombre" :premio="premio" />
@@ -23,9 +23,9 @@ import { gsap } from 'gsap'
 import { SplitText } from 'gsap/SplitText'
 
 const premios = [
-  { emoji: '🥤', nombre: '2x1 en smoothies', detalle: 'En cafés y juguerías aliadas.', requisito: 'Racha de 7 días', marca: { nombre: 'Vita Bar', inicial: 'V' } },
-  { emoji: '🏋️', nombre: 'Semana de gym gratis', detalle: 'Pase libre en gimnasios aliados.', requisito: 'Racha de 15 días', marca: { nombre: 'FitClub', inicial: 'F' } },
-  { emoji: '🎟️', nombre: 'Experiencias sorpresa', detalle: 'Clases y actividades para probar.', requisito: 'Racha de 30 días', marca: { nombre: 'Andar', inicial: 'A' } },
+  { nombre: '5% OFF en zapatillas', requisito: 'Nivel 1', marca: { nombre: 'Nike', logo: '/images/marcas/nike.png' } },
+  { nombre: 'Clase privada de yoga personalizada', requisito: 'Nivel 4', marca: { nombre: 'Bhumi Yoga Studio', logo: '/images/marcas/bhumi.png' } },
+  { nombre: 'Premium membership por un año', requisito: 'Nivel 8', marca: { nombre: 'Topper', logo: '/images/marcas/topper.png' } },
 ]
 
 const root = useTemplateRef('root')

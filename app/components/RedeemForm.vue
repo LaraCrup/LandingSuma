@@ -1,7 +1,7 @@
 <template>
   <div>
     <form
-      :class="['w-full flex flex-col gap-4 lg:gap-5 relative', card ? 'bg-white rounded-3xl shadow-[0_20px_50px_-20px_rgba(18,83,76,0.35)] p-5 sm:p-6 lg:p-7' : '']"
+      :class="['w-full flex flex-col gap-4 lg:gap-5 relative', card ? 'bg-light rounded-3xl shadow-[0_20px_50px_-20px_rgba(18,83,76,0.35)] p-5 sm:p-6 lg:p-7' : '']"
       @submit.prevent="handleSubmit">
 
       <div class="w-full flex flex-col gap-1.5">
@@ -13,7 +13,7 @@
           :class="['w-full rounded-full text-sm lg:text-base outline-none transition-colors duration-200 disabled:opacity-50 px-5 py-3 lg:py-3.5',
             dark
               ? 'bg-light/10 border border-light/25 focus:border-accent focus:ring-2 focus:ring-accent/20 text-light placeholder:text-light/40'
-              : 'bg-midlight/60 border border-primary/25 focus:border-primary focus:bg-white focus:ring-2 focus:ring-primary/20 placeholder:text-gray']" />
+              : 'bg-midlight/60 border border-primary/25 focus:border-primary focus:bg-light focus:ring-2 focus:ring-primary/20 placeholder:text-gray']" />
       </div>
 
       <div class="w-full flex flex-col gap-1.5">
@@ -27,7 +27,7 @@
             :class="['w-full h-16 lg:h-14 rounded-2xl text-center font-heading text-xl lg:text-2xl font-bold outline-none transition-colors duration-200 disabled:opacity-50',
               dark
                 ? 'bg-light/10 border border-light/25 focus:border-accent focus:ring-2 focus:ring-accent/20 text-light'
-                : 'bg-midlight/60 border border-primary/25 focus:border-primary focus:bg-white focus:ring-2 focus:ring-primary/20 text-green-dark']"
+                : 'bg-midlight/60 border border-primary/25 focus:border-primary focus:bg-light focus:ring-2 focus:ring-primary/20 text-green-dark']"
             @input="onDigitInput(i)" @keydown.backspace="onBackspace(i)" @paste.prevent="onPaste($event, i)" />
         </div>
       </div>
