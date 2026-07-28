@@ -55,8 +55,6 @@ onMounted(() => {
       onDark = nextDark
       el.style.width = isHover ? '26px' : '18px'
       el.style.height = isHover ? '26px' : '18px'
-      // En secciones oscuras el hover va en green-light: green-dark es el fondo mismo
-      // y el cursor desaparecía sobre los links del footer.
       el.style.background = onDark
         ? (isHover ? '#499F68' : '#D7F560')
         : (isHover ? '#D7F560' : '#12534C')

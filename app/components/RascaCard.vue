@@ -50,8 +50,6 @@ function pintarFoil() {
   const cx = rect.width / 2
   const cy = rect.height / 2 - 16
 
-  // El contenido debajo ahora es el gradiente verde de marca: el foil va en gris plata
-  // para que se distinga y se lea como "raspable".
   const foil = ctx2d.createLinearGradient(0, 0, rect.width, rect.height)
   foil.addColorStop(0, '#9fb3ab')
   foil.addColorStop(0.45, '#c3d3cb')
@@ -162,8 +160,6 @@ onMounted(() => {
   const repintar = () => { if (!revelado.value) pintarFoil() }
   document.fonts.ready.then(() => requestAnimationFrame(repintar))
 
-  // El logo se dibuja en el canvas: hay que repintar cuando termina de cargar,
-  // igual que con las fuentes, o el foil queda sin marca.
   logoImg = new Image()
   logoImg.onload = () => requestAnimationFrame(repintar)
   logoImg.src = props.premio.marca.logo

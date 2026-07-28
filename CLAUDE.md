@@ -212,8 +212,9 @@ Patrón copiado de `~/Desktop/Estudio/Kase/WebMecha`.
   repintar perdería el progreso. `getContext('2d', { willReadFrequently: true })` porque
   `medirRevelado` llama `getImageData` en cada `pointermove`.
   El canvas es `touch-pan-y`: **nunca `touch-none`**, que bloquea el scroll de la página.
-  Los dos `<p>` de la card llevan `min-h-[2lh]` para que las 3 cards midan igual (si no, el
-  nombre de una línea las desnivela y el canvas deja de tapar su contenedor).
+  El `<p>` del nombre lleva `min-h-[2lh]` para que las 3 cards midan igual (si no, el nombre
+  de una línea las desnivela y el canvas deja de tapar su contenedor) + `flex items-center`
+  para que los nombres de una sola línea queden centrados en esa caja de 2 líneas.
 
 ## Mecánicas por sección (estado al día)
 
@@ -229,9 +230,12 @@ Patrón copiado de `~/Desktop/Estudio/Kase/WebMecha`.
   blancos. `canjeados` es un array que bloquea el re-canje y muestra "✓ Canjeado".
   El `short` achica phone/gaps/padding; ver reglas de alto arriba.
 - **Recompensas:** solo título "Rascá tu racha y descubrí el beneficio". 3 `RascaCard` con
-  canvas de scratch-foil (gradiente verde + monograma de marca). Pincel radio 34, borra con
-  arco+línea (sin estela), revela al **60%** rascado. Card: emoji + nombre (`text-2xl`) +
-  detalle (`text-base text-dark/75`), footer con racha requerida (🔥) y chip "Desbloqueado".
+  canvas de scratch-foil (gris plata + logo real de la marca al 55% + "Rascá acá"). Pincel
+  radio 34, borra con arco+línea (sin estela), revela al **60%** rascado. Debajo del foil
+  va **solo el nombre del premio** sobre el gradiente verde: el logo existe únicamente
+  pintado en el canvas, si se pone también abajo se asoma por los huecos al rascar.
+  La banda inferior (62px) es un solo `span` que la llena entera: nivel requerido en reposo,
+  `bg-accent` + "Desbloqueado" al revelar, con transición `translateY`.
 - **Reviews:** título + reviews (carousel o marquees según viewport) + 3 stat-cards sobre
   `green-dark` con contador animado (label `text-base lg:text-lg text-light`).
 - **Cierre:** "suma." tipográfico gigante + botón "Descargar" + footer. Brillos flotantes,
@@ -241,7 +245,16 @@ Patrón copiado de `~/Desktop/Estudio/Kase/WebMecha`.
 
 - ✅ Toda la landing iterada y **full responsive** (mobile-first, con markup propio de mobile
   y desktop en las 4 secciones grandes — ver tabla arriba).
-- ⚠️ **Falta configurar `.env`** con las claves reales de Supabase. Hoy apunta a
-  `placeholder.supabase.co` y el fetch falla (hay try/catch, no rompe la UI).
-- ⏳ Logos de marcas de la rasca siguen siendo monograma placeholder dibujado en canvas.
+- ✅ `.env` configurado con las claves reales (key `sb_publishable_…`). La RPC `redeem_prize`
+  responde OK; con datos inexistentes devuelve `"not_found"`, que el form mapea a su modal.
+- ✅ SEO completo: og:image propia (`public/og-suma.jpg` 1200×630) + apple-touch-icon,
+  canonical y `og:url` dinámicos con `useRequestURL()`, JSON-LD (Organization + WebSite +
+  MobileApplication) en `index.vue`, twitter card, `lang="es-AR"`.
+  **Sin `Review`/`aggregateRating` a propósito:** las reseñas de la sección Reviews son
+  inventadas y marcarlas como datos estructurados reales es spam de rich snippets.
+- ✅ Fotos de hábitos optimizadas vía `@nuxt/image`: los originales pesan 52 MB en total
+  (~3 MB c/u, 1856×2304). Los `NuxtImg` del Hero llevan `width`/`height`/`format="webp"`
+  → 28 KB por foto. **Si se agregan fotos, copiar esos props o vuelve el problema.**
+- ⏳ Los links de Instagram y TikTok del footer apuntan a `#`. Al ponerlos, sumarlos también
+  como `sameAs` en el `Organization` del JSON-LD de `index.vue`.
 - ⏳ `README.md` sigue siendo el starter de Nuxt sin tocar.

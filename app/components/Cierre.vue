@@ -18,18 +18,18 @@
       </NuxtLink>
     </div>
 
-    <div class="w-full border-t border-light/10 mt-16 lg:mt-24 px-5 pt-5 pb-8 lg:pb-10 relative z-[1]">
+    <footer class="w-full border-t border-light/10 mt-16 lg:mt-24 px-5 pt-5 pb-8 lg:pb-10 relative z-[1]">
       <div class="w-full max-w-[75rem] flex flex-col sm:flex-row justify-between items-center gap-2 mx-auto">
         <div class="flex items-center gap-2.5 order-2 sm:order-1">
           <NuxtImg src="/images/isotipo.svg" alt="suma" class="h-6" />
-          <p class="text-xs text-light/50">© Suma. Todos los derechos reservados.</p>
+          <p class="text-xs text-light/50">© {{ anio }} Suma. Todos los derechos reservados.</p>
         </div>
-        <div class="flex items-center gap-5 order-1 sm:order-2">
+        <nav aria-label="Redes sociales" class="flex items-center gap-5 order-1 sm:order-2">
           <NuxtLink to="#" class="text-sm text-light/70 hover:text-accent transition-colors duration-200">Instagram</NuxtLink>
           <NuxtLink to="#" class="text-sm text-light/70 hover:text-accent transition-colors duration-200">TikTok</NuxtLink>
-        </div>
+        </nav>
       </div>
-    </div>
+    </footer>
   </section>
 </template>
 
@@ -37,10 +37,6 @@
 import { gsap } from 'gsap'
 import { SplitText } from 'gsap/SplitText'
 
-// Ningún brillo pasa de 76% de top: más abajo está el footer y quedan encima del texto.
-// `desdeSm` = aparece recién a partir de 480px: abajo de eso el ancho comprime todo
-// contra el centro y la mancha de brillos tapa el "suma". Sin flag quedan los 8
-// originales, que son los que ya estaban probados en mobile.
 const brillos = [
   { left: '8%', top: '16%', size: 64, op: 0.9 },
   { left: '25%', top: '42%', size: 24, op: 0.5 },
@@ -64,6 +60,8 @@ const brillos = [
   { left: '84%', top: '76%', size: 28, op: 0.45, desdeSm: true },
 ]
 
+const anio = new Date().getFullYear()
+
 const root = useTemplateRef('root')
 const titleRef = useTemplateRef('titleRef')
 const brilloEls = ref([])
@@ -75,8 +73,6 @@ useGsapContext(root, (ctx) => {
   nextTick(() => {
     brilloEls.value.forEach((el, i) => {
       if (!el) return
-      // Desfase por módulo y no por índice: con muchos brillos, i * n dejaba a los
-      // últimos con duraciones y delays larguísimos (arrancaban casi 6s tarde).
       gsap.to(el, {
         y: -12 - (i % 4) * 3,
         duration: 3.2 + (i % 5) * 0.45,

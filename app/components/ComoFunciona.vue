@@ -174,8 +174,6 @@ const RACHA_BASE = 5
 const PUNTOS_BASE = 280
 const PUNTOS_POR_HABITO = 40
 
-// Tras crear el hábito, el paso 2 muestra solo ese (el último pusheado). Si el usuario
-// saltó directo al paso 2 sin crear nada, mostramos los de ejemplo para que no quede vacío.
 const habitosVisibles = computed(() => creado.value ? habitos.value.slice(-1) : habitos.value)
 
 const completados = computed(() => habitosVisibles.value.filter(h => h.done).length)

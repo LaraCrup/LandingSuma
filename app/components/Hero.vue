@@ -36,7 +36,8 @@
           :data-dir="c % 2 === 0 ? 1 : -1">
           <div v-for="(foto, f) in [...fila, ...fila, ...fila]" :key="f"
             class="w-[130px] sm:w-[150px] shrink-0 relative rounded-2xl overflow-hidden">
-            <NuxtImg :src="`/images/habitos/${foto.src}.jpg`" alt="" class="w-full aspect-[3/4] object-cover" />
+            <NuxtImg :src="`/images/habitos/${foto.src}.jpg`" alt="" width="300" height="400" format="webp"
+              class="w-full aspect-[3/4] object-cover" />
             <div class="absolute inset-0 bg-green-dark/25 mix-blend-multiply" />
           </div>
         </div>
@@ -51,7 +52,8 @@
           :data-dir="c % 2 === 0 ? 1 : -1">
           <div v-for="(foto, f) in [...col, ...col, ...col]" :key="f"
             class="shrink-0 relative rounded-3xl overflow-hidden">
-            <NuxtImg :src="`/images/habitos/${foto.src}.jpg`" alt="" class="w-full aspect-[3/4] object-cover" />
+            <NuxtImg :src="`/images/habitos/${foto.src}.jpg`" alt="" width="480" height="640" format="webp"
+              class="w-full aspect-[3/4] object-cover" />
             <div class="absolute inset-0 bg-green-dark/25 mix-blend-multiply" />
           </div>
         </div>
