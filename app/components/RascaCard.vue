@@ -2,23 +2,21 @@
   <div
     class="rasca-card flex flex-col bg-light border border-primary/20 rounded-[28px] overflow-hidden shadow-[0_24px_50px_-30px_rgba(18,83,76,0.55)]">
     <div class="w-full relative overflow-hidden">
-      <div class="w-full aspect-[16/9] flex flex-col items-center justify-center gap-3 bg-gradient-secondary p-5">
-        <div class="w-[130px] h-16 flex items-center justify-center bg-light rounded-2xl shadow-[0_8px_20px_-8px_rgba(18,83,76,0.5)] px-4">
-          <NuxtImg :src="premio.marca.logo" :alt="premio.marca.nombre" class="max-w-full max-h-11 object-contain" />
-        </div>
-        <p class="min-h-[2lh] font-heading text-xl text-light font-bold text-center leading-tight">{{ premio.nombre }}</p>
+      <div class="w-full h-32 flex flex-col items-center justify-center bg-gradient-secondary p-5">
+        <p class="min-h-[2lh] flex items-center justify-center font-heading text-xl text-light font-bold text-center leading-tight">{{ premio.nombre }}</p>
       </div>
       <canvas ref="canvas"
         class="absolute inset-0 w-full h-full touch-pan-y cursor-grab active:cursor-grabbing"
         :class="revelado ? 'pointer-events-none' : ''" />
     </div>
 
-    <div class="h-[62px] flex items-center justify-center border-t border-primary/10 px-4">
+    <div class="h-[62px] border-t border-primary/10">
       <Transition name="listo" mode="out-in">
-        <span v-if="revelado" class="flex items-center gap-1 bg-accent rounded-full text-xs text-green-dark font-bold px-3 py-1.5">
-          ✓ Desbloqueado
+        <span v-if="revelado"
+          class="w-full h-full flex items-center justify-center bg-accent text-base text-green-dark font-bold px-4">
+          Desbloqueado
         </span>
-        <span v-else class="text-base text-green-dark font-semibold">
+        <span v-else class="w-full h-full flex items-center justify-center text-base text-green-dark font-semibold px-4">
           {{ premio.requisito }}
         </span>
       </Transition>
@@ -182,7 +180,7 @@ onBeforeUnmount(() => {
 
 <style scoped>
 .listo-enter-active {
-  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s ease;
+  transition: transform 0.4s cubic-bezier(0.34, 1.4, 0.64, 1), opacity 0.3s ease;
 }
 
 .listo-leave-active {
@@ -191,7 +189,7 @@ onBeforeUnmount(() => {
 
 .listo-enter-from,
 .listo-leave-to {
-  transform: scale(0.5);
+  transform: translateY(100%);
   opacity: 0;
 }
 </style>

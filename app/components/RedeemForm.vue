@@ -24,7 +24,7 @@
           <input v-for="(_, i) in runnerCode" :key="i" :ref="el => { if (el) inputs[i] = el }"
             v-model="runnerCode[i]" type="text" inputmode="numeric" maxlength="1"
             :aria-label="`Dígito ${i + 1} del número de corredor`" :disabled="isLoading"
-            :class="['w-full h-16 lg:h-14 rounded-2xl text-center font-heading text-xl lg:text-2xl font-bold outline-none transition-colors duration-200 disabled:opacity-50',
+            :class="['w-full h-12 lg:h-14 rounded-2xl text-center font-heading text-xl lg:text-2xl font-bold outline-none transition-colors duration-200 disabled:opacity-50',
               dark
                 ? 'bg-light/10 border border-light/25 focus:border-accent focus:ring-2 focus:ring-accent/20 text-light'
                 : 'bg-midlight/60 border border-primary/25 focus:border-primary focus:bg-light focus:ring-2 focus:ring-primary/20 text-green-dark']"

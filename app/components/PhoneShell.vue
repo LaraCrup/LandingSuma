@@ -14,7 +14,7 @@
         <div class="w-full flex justify-between items-center px-4 pt-3 pb-2">
           <div class="flex gap-2 items-center">
             <NuxtImg src="/images/isotipo.svg" alt="" class="w-5" />
-            <p class="text-sm">Hola, <span class="font-bold text-primary">vos</span></p>
+            <p class="text-xs">Hola, <span class="font-bold text-primary">vos</span></p>
           </div>
           <div class="flex items-center gap-1.5">
             <p class="text-xs">Nivel</p>
@@ -30,7 +30,7 @@
 
         <div class="flex justify-center items-center relative bg-primary rounded-t-[26px] py-3.5">
           <div class="w-11 h-11 flex items-center justify-center bg-accent rounded-full -mt-8 shadow-lg">
-            <NuxtImg src="/images/brillo.svg" alt="" class="w-5" />
+            <NuxtImg src="/images/brillo-primary.svg" alt="" class="w-5" />
           </div>
         </div>
       </div>

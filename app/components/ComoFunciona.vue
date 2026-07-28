@@ -101,7 +101,7 @@
                       <span class="text-[11px] text-light/50">{{ d }}</span>
                       <div
                         :class="['w-5 h-5 lg:w-6 lg:h-6 flex items-center justify-center rounded-full transition-colors duration-300', i < diasRacha ? 'bg-accent' : 'border border-light/25']">
-                        <NuxtImg v-if="i < diasRacha" src="/images/brillo.svg" alt="" class="w-2.5 lg:w-3" />
+                        <NuxtImg v-if="i < diasRacha" src="/images/brillo-dark-green.svg" alt="" class="w-2.5 lg:w-3" />
                       </div>
                     </div>
                   </div>
@@ -114,25 +114,26 @@
 
               <template v-else>
                 <p class="font-heading text-base text-green-dark font-semibold">Beneficios</p>
-                <div class="flex justify-between items-center bg-accent rounded-2xl p-3.5 short:p-2.5">
-                  <span class="text-sm text-green-dark font-bold">Tus puntos</span>
-                  <span class="flex items-center gap-1.5 text-base text-green-dark font-bold">
-                    <NuxtImg src="/images/brillo.svg" alt="" class="w-4 h-4" />
-                    {{ puntos }} pts
+                <div class="flex justify-between items-center bg-green-dark rounded-2xl p-3.5 short:p-2.5">
+                  <span class="text-sm text-accent font-bold">Tus puntos</span>
+                  <span class="flex items-center gap-1.5 text-base text-accent font-bold">
+                    <NuxtImg src="/images/brillo-light-green.svg" alt="" class="w-4 h-4" />
+                    {{ puntos }} XP
                   </span>
                 </div>
                 <button v-for="premio in premios.slice(0, 2)" :key="premio.nombre" @click="canjear(premio)"
                   :disabled="puntos < premio.pts || canjeados.includes(premio.nombre)"
                   :class="['w-full flex flex-col gap-2.5 bg-light rounded-2xl transition-all duration-200 active:scale-[0.98] p-4 short:p-3',
-                    puntos < premio.pts || canjeados.includes(premio.nombre) ? 'opacity-45' : 'hover:shadow-[0_10px_24px_-14px_rgba(18,83,76,0.5)]']">
+                    puntos < premio.pts || canjeados.includes(premio.nombre) ? '' : 'hover:shadow-[0_10px_24px_-14px_rgba(18,83,76,0.5)]']">
                   <div class="w-full min-w-0 flex items-center gap-3">
                     <div class="w-10 h-10 short:w-9 short:h-9 flex flex-shrink-0 items-center justify-center rounded-full bg-gradient-secondary text-lg">
                       {{ premio.emoji }}
                     </div>
                     <p class="min-w-0 flex-1 text-sm text-dark font-semibold text-left">{{ premio.nombre }}</p>
                   </div>
-                  <span :class="['w-full rounded-full text-xs font-bold text-center whitespace-nowrap px-3 py-2', puntos >= premio.pts ? 'bg-accent text-green-dark' : 'bg-midlight text-green-dark']">
-                    {{ canjeados.includes(premio.nombre) ? '✓ Canjeado' : puntos >= premio.pts ? 'Canjear' : premio.pts + ' pts' }}
+                  <span :class="['w-full rounded-full text-xs font-bold text-center whitespace-nowrap transition-colors duration-300 px-3 py-2',
+                    canjeados.includes(premio.nombre) ? 'bg-green-light text-light' : puntos >= premio.pts ? 'bg-accent text-green-dark' : 'bg-gray text-dark']">
+                    {{ canjeados.includes(premio.nombre) ? 'Canjeado' : puntos >= premio.pts ? 'Canjear' : premio.pts + ' pts' }}
                   </span>
                 </button>
               </template>

@@ -2,7 +2,7 @@
   <section ref="root" class="w-full relative bg-green-dark overflow-hidden" data-cursor-dark>
     <img v-for="(b, i) in brillos" :key="i" :ref="el => { if (el) brilloEls[i] = el }"
       src="/images/brillo-accent.svg" alt="" aria-hidden="true"
-      class="brillo absolute z-0 pointer-events-none"
+      :class="['brillo absolute z-0 pointer-events-none', b.desdeSm ? 'hidden sm:block' : '']"
       :style="{ width: b.size + 'px', left: b.left, top: b.top, '--op': b.op }" />
 
     <div class="w-full max-w-[75rem] flex flex-col items-center gap-8 lg:gap-14 relative z-[1] text-center px-5 sm:px-8 pt-20 lg:pt-32 mx-auto">
@@ -37,15 +37,31 @@
 import { gsap } from 'gsap'
 import { SplitText } from 'gsap/SplitText'
 
+// Ningún brillo pasa de 76% de top: más abajo está el footer y quedan encima del texto.
+// `desdeSm` = aparece recién a partir de 480px: abajo de eso el ancho comprime todo
+// contra el centro y la mancha de brillos tapa el "suma". Sin flag quedan los 8
+// originales, que son los que ya estaban probados en mobile.
 const brillos = [
   { left: '8%', top: '16%', size: 64, op: 0.9 },
-  { left: '18%', top: '42%', size: 24, op: 0.5 },
-  { left: '11%', top: '70%', size: 46, op: 0.6 },
-  { left: '24%', top: '88%', size: 18, op: 0.4 },
-  { left: '90%', top: '14%', size: 70, op: 0.85 },
+  { left: '25%', top: '42%', size: 24, op: 0.5 },
+  { left: '12%', top: '52%', size: 46, op: 0.6 },
+  { left: '32%', top: '68%', size: 18, op: 0.4 },
+  { left: '80%', top: '10%', size: 70, op: 0.85 },
   { left: '80%', top: '40%', size: 30, op: 0.55 },
-  { left: '92%', top: '66%', size: 52, op: 0.6 },
-  { left: '78%', top: '88%', size: 20, op: 0.45 },
+  { left: '86%', top: '52%', size: 52, op: 0.6 },
+  { left: '78%', top: '70%', size: 20, op: 0.45 },
+  { left: '3%', top: '36%', size: 30, op: 0.5, desdeSm: true },
+  { left: '17%', top: '6%', size: 22, op: 0.45, desdeSm: true },
+  { left: '5%', top: '72%', size: 36, op: 0.5, desdeSm: true },
+  { left: '22%', top: '26%', size: 14, op: 0.35, desdeSm: true },
+  { left: '38%', top: '9%', size: 18, op: 0.4, desdeSm: true },
+  { left: '20%', top: '52%', size: 12, op: 0.3, desdeSm: true },
+  { left: '58%', top: '5%', size: 14, op: 0.35, desdeSm: true },
+  { left: '70%', top: '10%', size: 26, op: 0.5, desdeSm: true },
+  { left: '96%', top: '34%', size: 22, op: 0.45, desdeSm: true },
+  { left: '76%', top: '54%', size: 16, op: 0.4, desdeSm: true },
+  { left: '66%', top: '74%', size: 24, op: 0.45, desdeSm: true },
+  { left: '84%', top: '76%', size: 28, op: 0.45, desdeSm: true },
 ]
 
 const root = useTemplateRef('root')
@@ -59,11 +75,13 @@ useGsapContext(root, (ctx) => {
   nextTick(() => {
     brilloEls.value.forEach((el, i) => {
       if (!el) return
+      // Desfase por módulo y no por índice: con muchos brillos, i * n dejaba a los
+      // últimos con duraciones y delays larguísimos (arrancaban casi 6s tarde).
       gsap.to(el, {
-        y: -14,
-        duration: 3.5 + i * 0.4,
+        y: -12 - (i % 4) * 3,
+        duration: 3.2 + (i % 5) * 0.45,
         yoyo: true, repeat: -1, ease: 'sine.inOut',
-        delay: i * 0.3,
+        delay: (i % 7) * 0.35,
       })
     })
   })
