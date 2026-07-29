@@ -7,9 +7,10 @@
       </div>
       <!-- La marca solo existía pintada en el canvas: invisible para lectores de pantalla y buscadores -->
       <span class="sr-only">Beneficio de {{ premio.marca.nombre }}. {{ premio.requisito }}.</span>
+      <!-- touch-none solo mientras se está rascando de verdad (ver `enganchado`): fijo bloquearía el scroll -->
       <canvas ref="canvas" aria-hidden="true"
-        class="absolute inset-0 w-full h-full touch-pan-y cursor-grab active:cursor-grabbing"
-        :class="revelado ? 'pointer-events-none' : ''" />
+        class="absolute inset-0 w-full h-full cursor-grab active:cursor-grabbing"
+        :class="[revelado ? 'pointer-events-none' : '', enganchado ? 'touch-none' : 'touch-pan-y']" />
 
       <!-- Rascar es un gesto de trayectoria: hace falta una alternativa accesible por teclado -->
       <button v-if="!revelado" type="button" @click="revelarTodo"
@@ -39,10 +40,16 @@ const props = defineProps({
   premio: { type: Object, required: true },
 })
 
-const BRUSH = 34
+const REVELA = 0.5
 const canvas = ref(null)
 const revelado = ref(false)
+// Mientras es true el canvas pasa a touch-none y se puede rascar en cualquier dirección
+const enganchado = ref(false)
 let logoImg = null
+
+const esTactil = () => window.matchMedia('(pointer: coarse)').matches
+// Con el dedo la huella tapa el trazo: un pincel chico obliga a rascar de más
+const brush = () => (esTactil() ? 46 : 34)
 
 function pintarFoil() {
   const el = canvas.value
@@ -79,7 +86,7 @@ function pintarFoil() {
   ctx2d.textBaseline = 'middle'
   ctx2d.fillStyle = 'rgba(18,83,76,0.85)'
   ctx2d.font = '700 20px Quicksand, sans-serif'
-  ctx2d.fillText('Rascá acá', cx, cy + 46)
+  ctx2d.fillText(esTactil() ? 'Deslizá acá 👉' : 'Rascá acá', cx, cy + 46)
   ctx2d.textBaseline = 'alphabetic'
 
   if (logoImg?.complete && logoImg.naturalWidth) {
@@ -93,9 +100,13 @@ function pintarFoil() {
   }
 }
 
+let sueltaTimer = null
+
 function revelarTodo() {
   if (revelado.value) return
   revelado.value = true
+  enganchado.value = false
+  clearTimeout(sueltaTimer)
   if (canvas.value) gsap.to(canvas.value, { opacity: 0, duration: 0.5, ease: 'power2.out' })
 }
 
@@ -108,6 +119,8 @@ function conectarRasca() {
 
   let rascando = false
   let ultimo = null
+  let inicio = null
+  let moves = 0
 
   const punto = (e) => {
     const r = el.getBoundingClientRect()
@@ -115,12 +128,13 @@ function conectarRasca() {
   }
 
   const borrar = (p) => {
+    const r = brush()
     ctx2d.globalCompositeOperation = 'destination-out'
-    ctx2d.lineWidth = BRUSH * 2
+    ctx2d.lineWidth = r * 2
     ctx2d.lineCap = 'round'
     ctx2d.lineJoin = 'round'
     ctx2d.beginPath()
-    ctx2d.arc(p.x, p.y, BRUSH, 0, Math.PI * 2)
+    ctx2d.arc(p.x, p.y, r, 0, Math.PI * 2)
     ctx2d.fill()
     if (ultimo) {
       ctx2d.beginPath()
@@ -137,30 +151,56 @@ function conectarRasca() {
     for (let i = 3; i < data.length; i += 64) {
       if (data[i] === 0) transparentes++
     }
-    if (transparentes / (data.length / 64) > 0.60) revelarTodo()
+    if (transparentes / (data.length / 64) > REVELA) revelarTodo()
   }
 
-  const empezar = (e) => { rascando = true; ultimo = null; borrar(punto(e)) }
+  const empezar = (e) => {
+    clearTimeout(sueltaTimer)
+    rascando = true
+    ultimo = null
+    moves = 0
+    inicio = { x: e.clientX, y: e.clientY }
+    el.setPointerCapture?.(e.pointerId)
+    borrar(punto(e))
+  }
+
   const mover = (e) => {
     if (!rascando) return
+    // El primer trazo horizontal delata que quiere rascar y no scrollear: recién
+    // ahí el canvas pasa a touch-none, así el gesto siguiente vale en cualquier dirección
+    if (!enganchado.value && inicio) {
+      const dx = Math.abs(e.clientX - inicio.x)
+      const dy = Math.abs(e.clientY - inicio.y)
+      if (dx > 8 && dx > dy) enganchado.value = true
+    }
     e.preventDefault()
     borrar(punto(e))
-    medirRevelado()
+    // getImageData sobre todo el canvas en cada move hace tironear el dedo en mobile
+    if (++moves % 4 === 0) medirRevelado()
   }
+
   const soltar = () => {
     if (!rascando) return
     rascando = false
     ultimo = null
+    inicio = null
     medirRevelado()
+    // Devolver el scroll si dejó de rascar, para no dejar la card atrapando el gesto
+    clearTimeout(sueltaTimer)
+    sueltaTimer = setTimeout(() => { enganchado.value = false }, 1200)
   }
 
   el.addEventListener('pointerdown', empezar)
   el.addEventListener('pointermove', mover)
   window.addEventListener('pointerup', soltar)
+  // Si el navegador se queda con el gesto (scroll) manda pointercancel, no pointerup
+  window.addEventListener('pointercancel', soltar)
   cleanup = () => {
     el.removeEventListener('pointerdown', empezar)
     el.removeEventListener('pointermove', mover)
     window.removeEventListener('pointerup', soltar)
+    window.removeEventListener('pointercancel', soltar)
+    clearTimeout(sueltaTimer)
   }
 }
 

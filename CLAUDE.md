@@ -142,8 +142,19 @@ Imágenes de hábitos en `public/images/habitos/`, con **nombre descriptivo en k
 (`correr-parque.webp`, `preparar-viandas.webp`…) — no numeradas: el nombre de archivo lo lee
 Google Imágenes y evita tener que abrirlas para saber cuál es cuál. 960×1280, 3:4 vertical,
 ~100 KB c/u. **Solo se versiona la versión optimizada**; los originales de cámara (2,9 MB c/u)
-no van al repo. Para sumar más: optimizar con sharp (receta en el README), guardar el `.webp`
-y agregar su `{ src, alt }` al array `filas` de `Hero.vue`.
+no van al repo. Para sumar más: optimizar con sharp, guardar el `.webp` y agregar su
+`{ src, alt }` al array `filas` de `Hero.vue`.
+
+```bash
+node -e "
+const sharp = require('sharp');
+sharp('/ruta/a/la/foto-original.jpg')
+  .resize(960, 1280, { fit: 'cover' })
+  .webp({ quality: 78 })
+  .toFile('public/images/habitos/nadar-pileta.webp');
+"
+```
+
 El `alt` es obligatorio y descriptivo, aunque el contenedor sea `aria-hidden`: son 3 copias
 duplicadas de cada foto en un loop decorativo, así que el lector de pantalla no las anuncia,
 pero el `alt` sirve igual para buscadores y si algún día se saca el `aria-hidden`.
@@ -219,6 +230,9 @@ Patrón copiado de `~/Desktop/Estudio/Kase/WebMecha`.
 - **`PhoneShell` + `HabitCard` son código, no imagen.** UI real de la app en HTML/CSS con
   animación GSAP. Tipografías en px fijos: por debajo de ~255px de ancho el layout se rompe.
   Solo se usan en `ComoFunciona`, contenidos dentro del marco del teléfono.
+  El marco es **`aspect-[390/700] lg:aspect-[390/830]`**: en mobile ocupa `w-full max-w-[400px]`
+  y con el aspect real de un iPhone (390/830) daba 851px de alto, más que la pantalla. El aspect
+  achatado es a propósito — se pierde proporción de teléfono, se gana que entre entero.
 
 - **Hilo SVG en `ComoFunciona`:** una curva Bézier (`hiloPath`) conecta el borde derecho del
   paso activo con el borde izquierdo del teléfono, en coords relativas a `filaRef`. Se re-pinta
@@ -243,7 +257,14 @@ Patrón copiado de `~/Desktop/Estudio/Kase/WebMecha`.
   enganchan una sola vez) y se re-pinta con `ResizeObserver`, salvo que ya esté rascado —
   repintar perdería el progreso. `getContext('2d', { willReadFrequently: true })` porque
   `medirRevelado` llama `getImageData` en cada `pointermove`.
-  El canvas es `touch-pan-y`: **nunca `touch-none`**, que bloquea el scroll de la página.
+  El canvas arranca `touch-pan-y` (el dedo hacia abajo scrollea la página, no rasca). En cuanto
+  el primer trazo resulta **horizontal** (`dx > 8 && dx > dy`) se prende `enganchado` y el canvas
+  pasa a `touch-none`, así los trazos siguientes rascan en cualquier dirección. Se apaga solo
+  1,2 s después de soltar (y al revelar): **`touch-none` fijo bloquea el scroll de la página**, por
+  eso es condicional y con auto-reset. `pointercancel` cuenta como soltar — cuando el navegador
+  se queda con el gesto para scrollear no manda `pointerup`. El pincel es más grande con
+  `(pointer: coarse)` (46 vs 34) porque el dedo tapa el trazo, y `medirRevelado` corre 1 de cada
+  4 `pointermove` (`getImageData` de todo el canvas en cada move hace tironear el dedo).
   El `<p>` del nombre lleva `min-h-[2lh]` para que las 3 cards midan igual (si no, el nombre
   de una línea las desnivela y el canvas deja de tapar su contenedor) + `flex items-center`
   para que los nombres de una sola línea queden centrados en esa caja de 2 líneas.
@@ -271,17 +292,23 @@ Patrón copiado de `~/Desktop/Estudio/Kase/WebMecha`.
   Paso activo `bg-green-dark`, ya recorridos `bg-primary` (era `green-dark/45`, que daba
   2.03:1 de contraste), pendientes blancos. `canjeados` bloquea el re-canje.
   La unidad de gamificación es **XP** en toda la sección (antes convivían "pts" y "XP").
-  El `short` achica phone/gaps/padding; ver reglas de alto arriba.
-- **Recompensas:** solo título "Rascá tu racha y descubrí el beneficio". 3 `RascaCard` con
-  canvas de scratch-foil (gris plata + logo real de la marca al 55% + "Rascá acá"). Pincel
-  radio 34, borra con arco+línea (sin estela), revela al **60%** rascado. Debajo del foil
+  El teléfono es `w-full max-w-[400px]` en mobile y vuelve a anchos fijos desde `lg`
+  (`lg:max-w-none`); el `short` achica phone/gaps/padding, ver reglas de alto arriba.
+- **Recompensas:** solo título "Rascá y descubrí tu beneficio". 3 `RascaCard` con
+  canvas de scratch-foil (gris plata + logo real de la marca al 55% + "Rascá acá", que en
+  táctil dice "Deslizá acá 👉" porque el gesto que funciona ahí es el horizontal). Pincel
+  radio 34 (46 en táctil), borra con arco+línea (sin estela), revela al **50%** rascado.
+  Debajo del foil
   va **solo el nombre del premio** sobre el gradiente verde: el logo existe únicamente
   pintado en el canvas, si se pone también abajo se asoma por los huecos al rascar.
   La banda inferior (62px) es un solo `span` que la llena entera: nivel requerido en reposo,
   `bg-accent` + "Desbloqueado" al revelar, con transición `translateY`.
 - **Reviews:** título + 2 marquees de reseñas (mismo markup en todo ancho) + 3 stat-cards
-  sobre `green-dark` con contador animado. Cada reseña es `<figure>` + `<blockquote>` +
-  `<figcaption>`. El degradado de los bordes va como `style` en el `<MarqueeReactive>` y
+  sobre `green-dark` con contador animado. Son **12 reseñas**, 6 por fila y sin repetirse entre
+  filas (`slice(0,6)` / `slice(6)`); con menos de 6 por fila la copia no llena el ancho y se
+  ve el hueco del loop. Cada reseña es `<figure>` + `<blockquote>` + `<figcaption>`, y el
+  `figcaption` **cuelga directo del `figure`** (envuelve avatar y nombre): anidado en un `div`
+  el HTML no valida. El degradado de los bordes va como `style` en el `<MarqueeReactive>` y
   funciona porque el componente re-bindea `$attrs.style` — tiene `inheritAttrs: false`, así
   que si se agrega otro atributo hay que re-bindearlo a mano o se descarta en silencio.
 - **Cierre:** "suma" tipográfico gigante + botón "Descargar suma". Brillos flotantes,
@@ -298,11 +325,14 @@ Patrón copiado de `~/Desktop/Estudio/Kase/WebMecha`.
   y mapea **solo** `ok` / `already_redeemed` / `not_found`; cualquier otro valor cae en el
   modal genérico de error (antes decía "no figurás en el listado", que podía ser falso).
 - ✅ SEO: og:image propia (`public/og-suma.jpg` 1200×630) + apple-touch-icon + favicon SVG +
-  `site.webmanifest`, canonical/`og:url` desde **`NUXT_PUBLIC_SITE_URL`** (fijo, no
+  `site.webmanifest`. El favicon SVG es **`public/favicon.svg`**, generado a partir del isotipo
+  pero en lienzo **cuadrado** sobre el verde de marca: el `isotipo.svg` suelto es apaisado
+  (76.96×65.44) y transparente, y a 16px en la pestaña quedaba diminuto e ilegible.
+  Canonical/`og:url` desde **`NUXT_PUBLIC_SITE_URL`** (fijo, no
   `useRequestURL()`: con el origin del request cada preview de Vercel se auto-canonicalizaba),
   JSON-LD (Organization + WebSite + **WebApplication**) en `index.vue`, `robots.txt` y
   `sitemap.xml` como rutas de Nitro, twitter card, `lang="es-AR"`.
-  **Sin `Review`/`aggregateRating` a propósito:** las reseñas de la sección Reviews son
+  **Sin `Review`/`aggregateRating` a propósito:** las 12 reseñas de la sección Reviews son
   inventadas y marcarlas como datos estructurados reales es spam de rich snippets.
 - ✅ Fotos optimizadas **en origen**: 20 WebP de 960×1280 (~2 MB en total, antes 52 MB de JPG
   a 1856×2304). Van con `decoding="async"` (sin `lazy`, ver arriba) y con `alt` descriptivo;
@@ -311,6 +341,15 @@ Patrón copiado de `~/Desktop/Estudio/Kase/WebMecha`.
 - ✅ `:focus-visible` global **sin `border-radius` propio**: si se le pone uno, el outline le
   cuadra las esquinas a los inputs `rounded-full`. Los `input` lo suprimen porque ya traen su
   propio anillo (`focus:ring-2`) con el radio correcto.
+- ✅ HTML válido en el validador del W3C (los 24 errores eran `figcaption` colgando de un `div`
+  en `Reviews`; ahora el `figcaption` es hijo directo de `figure` y envuelve avatar + nombre).
+  ⚠️ Validar siempre el **build** (`node .output/server/index.mjs`), no el dev server: en dev
+  las URLs `/_nuxt/@fs/…` traen la ruta del proyecto, que tiene espacios, y dan errores falsos.
+- ✅ Lighthouse: los casilleros del código ya **no cancelan el pegado**. El reparto de un código
+  pegado se hace desde el `input` (`inputType === 'insertFromPaste'`) en vez de un handler de
+  `paste` con `preventDefault`, que Lighthouse marca como bloquear el pegado. Por eso el
+  `maxlength` es 6 y no 1: con 1 el navegador trunca el pegado y se pierden los otros dígitos.
+  `sourcemap: { client: true }` en `nuxt.config` para que Lighthouse pueda auditar el JS propio.
 - ⏳ Los links de Instagram y TikTok de `AppFooter` apuntan a `#`. Al ponerlos, sumarlos
   también como `sameAs` en el `Organization` del JSON-LD de `index.vue`.
 - ⏳ `NUXT_PUBLIC_SITE_URL` tiene como default `https://landing-suma.vercel.app`, que es una

@@ -3,7 +3,7 @@
     <div class="xxl:max-w-[75rem] w-full flex flex-col items-center gap-8 lg:gap-12 xxl:mx-auto">
       <div class="flex flex-col items-center text-center px-5 sm:px-8 md:px-10 lg:px-16 xxl:px-32">
         <h2 ref="titleRef" class="max-w-[20ch] font-heading text-3xl lg:text-5xl text-primary font-medium leading-[1.05]">
-          Rascá tu racha y descubrí el beneficio
+          Rascá y descubrí tu beneficio
         </h2>
       </div>
 

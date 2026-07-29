@@ -61,14 +61,14 @@
 
       <div class="w-full lg:w-auto flex justify-center lg:justify-end relative z-10 order-2">
         <PhoneShell ref="phoneWrap" :toast="toast" :nivel="nivel" :frase="pasos[activo].frase"
-          width="w-[240px] lg:w-[264px] short:w-[248px] xxl:w-[320px] xxl:short:w-[270px]">
+          width="w-full max-w-[400px] lg:max-w-none lg:w-[300px] lg:short:w-[264px] xxl:w-[340px] xxl:short:w-[280px]">
           <Transition name="pantalla" mode="out-in">
             <div :key="activo" class="flex flex-col gap-3.5">
 
               <template v-if="activo === 0">
                 <p class="font-heading text-base text-green-dark font-semibold">Nuevo hábito</p>
                 <label class="sr-only" :for="`${uid}-habito`">Nombre del hábito</label>
-                <input :id="`${uid}-habito`" v-model="nuevoNombre" placeholder="Ej.: Meditar 10 min"
+                <input :id="`${uid}-habito`" v-model="nuevoNombre" placeholder="Ej.: Correr una carrera"
                   class="w-full border border-primary/40 rounded-xl text-sm font-semibold outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 placeholder:text-dark/65 px-3.5 py-3" />
                 <div class="flex justify-center gap-3" role="group" aria-label="Ícono del hábito">
                   <button v-for="emoji in emojis" :key="emoji" type="button" @click="nuevoEmoji = emoji"
@@ -157,11 +157,11 @@ import { SplitText } from 'gsap/SplitText'
 
 const uid = useId()
 
-const emojis = ['🧘', '💧', '🏃', '📖']
+const emojis = ['🏃', '🧘', '💧', '📖']
 const nombresEmoji = {
+  '🏃': 'Correr',
   '🧘': 'Meditación',
   '💧': 'Hidratación',
-  '🏃': 'Correr',
   '📖': 'Lectura',
 }
 
@@ -177,7 +177,7 @@ const habitos = ref([
 
 const activo = ref(0)
 const nuevoNombre = ref('')
-const nuevoEmoji = ref('🧘')
+const nuevoEmoji = ref('🏃')
 const creado = ref(false)
 const toast = ref(null)
 let toastTimer = null

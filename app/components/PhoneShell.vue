@@ -1,6 +1,6 @@
 <template>
   <div :class="['relative select-none', width]">
-    <div class="w-full aspect-[390/830] relative rounded-[52px] p-[10px]"
+    <div class="w-full aspect-[390/700] lg:aspect-[390/830] relative rounded-[52px] p-[10px]"
       style="background: linear-gradient(160deg, #2a2a2c 0%, #1a1a1c 50%, #0e0e10 100%); box-shadow: 0 0 0 1px rgba(255,255,255,0.05) inset, 0 0 0 2px #000 inset, 0 40px 80px -16px rgba(18,83,76,0.5), 0 12px 24px -8px rgba(0,0,0,0.35);">
 
       <div class="w-[80px] h-[24px] absolute top-[20px] left-1/2 -translate-x-1/2 z-10 bg-black rounded-full" />

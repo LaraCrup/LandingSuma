@@ -21,12 +21,12 @@
         </span>
         <div class="w-full grid grid-cols-6 gap-2 lg:gap-2.5" role="group" :aria-labelledby="`${uid}-code-label`">
           <input v-for="(_, i) in runnerCode" :key="i" :ref="el => { if (el) inputs[i] = el }"
-            v-model="runnerCode[i]" type="text" inputmode="numeric" maxlength="1" autocomplete="off"
+            v-model="runnerCode[i]" type="text" inputmode="numeric" maxlength="6" autocomplete="off"
             :aria-label="`Dígito ${i + 1} del número de corredor`" :disabled="isLoading"
             :aria-invalid="campoConError === 'codigo' || undefined"
             :aria-describedby="formError ? `${uid}-error` : undefined"
             class="w-full h-12 lg:h-14 bg-midlight/60 border border-primary/25 rounded-2xl text-center font-heading text-xl lg:text-2xl text-green-dark font-bold outline-none transition-colors duration-200 focus:border-primary focus:bg-light focus:ring-2 focus:ring-primary/20 disabled:opacity-50"
-            @input="onDigitInput(i)" @keydown.backspace="onBackspace(i)" @paste.prevent="onPaste($event, i)" />
+            @input="onDigitInput(i, $event)" @keydown.backspace="onBackspace(i)" />
         </div>
       </div>
 
@@ -82,8 +82,22 @@ const errorContent = {
 }
 const errorType = ref('not_found')
 
-function onDigitInput(index) {
+// El pegado se reparte desde acá y no desde un handler de `paste`: cancelar el paste
+// para repartirlo a mano cuenta como bloquear el pegado (lo marca Lighthouse)
+function onDigitInput(index, event) {
   const digits = (runnerCode.value[index] ?? '').replace(/\D/g, '')
+  const pegado = event?.inputType
+    ? event.inputType.startsWith('insertFromPaste')
+    : digits.length > 1
+
+  if (pegado && digits.length > 1) {
+    for (let i = 0; i < digits.length && index + i < 6; i++) {
+      runnerCode.value[index + i] = digits[i]
+    }
+    inputs.value[Math.min(index + digits.length, 5)]?.focus()
+    return
+  }
+
   runnerCode.value[index] = digits.slice(-1)
   if (runnerCode.value[index] && index < 5) {
     inputs.value[index + 1]?.focus()
@@ -94,15 +108,6 @@ function onBackspace(index) {
   if (!runnerCode.value[index] && index > 0) {
     inputs.value[index - 1]?.focus()
   }
-}
-
-function onPaste(event, index) {
-  const digits = (event.clipboardData?.getData('text') ?? '').replace(/\D/g, '')
-  if (!digits) return
-  for (let i = 0; i < digits.length && index + i < 6; i++) {
-    runnerCode.value[index + i] = digits[i]
-  }
-  inputs.value[Math.min(index + digits.length, 5)]?.focus()
 }
 
 function fallar(mensaje, campo, el) {

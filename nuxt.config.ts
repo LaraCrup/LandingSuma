@@ -17,6 +17,8 @@ export default defineNuxtConfig({
     '@nuxt/fonts',
   ],
   css: ['~/assets/css/main.css'],
+  // Sin los .map Lighthouse no puede auditar el JS de primera parte
+  sourcemap: { client: true },
   vite: {
     optimizeDeps: {
       include: ['gsap', 'gsap/ScrollTrigger', 'gsap/SplitText', 'lenis'],
@@ -91,8 +93,9 @@ export default defineNuxtConfig({
         { name: 'twitter:image:alt', content: 'suma — La constancia en tu bienestar merece recompensas' },
       ],
       link: [
-        { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
-        { rel: 'icon', type: 'image/svg+xml', href: '/images/isotipo.svg' },
+        { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico', sizes: '32x32' },
+        // isotipo.svg es apaisado y transparente: en la pestaña quedaba diminuto e ilegible
+        { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg', sizes: 'any' },
         { rel: 'apple-touch-icon', href: '/apple-touch-icon.png' },
         { rel: 'manifest', href: '/site.webmanifest' },
       ],
