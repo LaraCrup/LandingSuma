@@ -4,11 +4,4 @@ import { SplitText } from 'gsap/SplitText'
 
 export default defineNuxtPlugin(() => {
   gsap.registerPlugin(ScrollTrigger, SplitText)
-
-  return {
-    provide: {
-      gsap,
-      ScrollTrigger,
-    },
-  }
 })

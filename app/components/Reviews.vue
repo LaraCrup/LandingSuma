@@ -8,48 +8,48 @@
       </div>
 
       <div class="w-full flex flex-col gap-4 mdlg:gap-5">
-        <MarqueeReactive :items="filaA" :speed="45" separator="" copy-class="gap-5 pr-5"
+        <MarqueeReactive :items="filaA" :speed="45" copy-class="gap-5 pr-5"
           aria-label="Reseñas de usuarios de suma"
           style="mask-image: linear-gradient(to right, transparent, black 6%, black 94%, transparent)">
           <template #item="{ item }">
-            <div class="w-[280px] mdlg:w-[360px] h-40 mdlg:h-44 flex flex-col justify-between bg-light border border-green-light/40 rounded-3xl p-5">
-              <p class="text-base mdlg:text-lg text-dark/85 leading-snug line-clamp-3">"{{ item.quote }}"</p>
+            <figure class="w-[280px] mdlg:w-[360px] h-40 mdlg:h-44 flex flex-col justify-between bg-light border border-green-light/40 rounded-3xl p-5">
+              <blockquote class="text-base mdlg:text-lg text-dark/85 leading-snug line-clamp-3">“{{ item.quote }}”</blockquote>
               <div class="flex justify-between items-center">
                 <div class="flex items-center gap-2.5">
                   <div class="w-8 h-8 flex flex-shrink-0 items-center justify-center rounded-full bg-gradient-secondary text-light text-sm font-semibold">
                     {{ item.name.charAt(0) }}
                   </div>
-                  <span class="text-sm text-green-dark font-semibold">{{ item.name }}, {{ item.age }}</span>
+                  <figcaption class="text-sm text-green-dark font-semibold">{{ item.name }}, {{ item.age }}</figcaption>
                 </div>
-                <NuxtImg src="/images/brillo-primary.svg" alt="" class="w-4 h-4" />
+                <img src="/images/brillo-primary.svg" alt="" class="w-4 h-4" />
               </div>
-            </div>
+            </figure>
           </template>
         </MarqueeReactive>
 
-        <MarqueeReactive :items="filaB" :speed="45" direction="right" separator="" copy-class="gap-5 pr-5"
+        <MarqueeReactive :items="filaB" :speed="45" direction="right" copy-class="gap-5 pr-5"
           aria-label="Más reseñas de usuarios de suma"
           style="mask-image: linear-gradient(to right, transparent, black 6%, black 94%, transparent)">
           <template #item="{ item }">
-            <div class="w-[280px] mdlg:w-[360px] h-40 mdlg:h-44 flex flex-col justify-between bg-midlight rounded-3xl p-5">
-              <p class="text-base mdlg:text-lg text-dark/85 leading-snug line-clamp-3">"{{ item.quote }}"</p>
+            <figure class="w-[280px] mdlg:w-[360px] h-40 mdlg:h-44 flex flex-col justify-between bg-midlight rounded-3xl p-5">
+              <blockquote class="text-base mdlg:text-lg text-dark/85 leading-snug line-clamp-3">“{{ item.quote }}”</blockquote>
               <div class="flex justify-between items-center">
                 <div class="flex items-center gap-2.5">
                   <div class="w-8 h-8 flex flex-shrink-0 items-center justify-center rounded-full bg-gradient-secondary text-light text-sm font-semibold">
                     {{ item.name.charAt(0) }}
                   </div>
-                  <span class="text-sm text-green-dark font-semibold">{{ item.name }}, {{ item.age }}</span>
+                  <figcaption class="text-sm text-green-dark font-semibold">{{ item.name }}, {{ item.age }}</figcaption>
                 </div>
-                <NuxtImg src="/images/brillo-primary.svg" alt="" class="w-4 h-4" />
+                <img src="/images/brillo-primary.svg" alt="" class="w-4 h-4" />
               </div>
-            </div>
+            </figure>
           </template>
         </MarqueeReactive>
       </div>
 
       <div class="w-full max-w-[80rem] grid grid-cols-1 md:grid-cols-3 gap-4 lg:gap-6 px-5 sm:px-8 md:px-10 lg:px-16 xxl:px-0 mx-auto">
         <div v-for="stat in stats" :key="stat.label"
-          class="stat-card flex flex-col items-center gap-1 bg-green-dark rounded-3xl text-center p-6 lg:p-8">
+          class="stat-card h-full flex flex-col justify-between items-center gap-3 bg-green-dark rounded-3xl text-center p-6 lg:p-8">
           <span class="font-heading text-4xl lg:text-5xl text-accent font-bold tabular-nums">
             <span class="stat-num" :data-target="stat.valor">0</span>{{ stat.sufijo }}
           </span>
@@ -78,7 +78,7 @@ const filaB = [...reviews.slice(3), ...reviews.slice(0, 3)]
 
 const stats = [
   { valor: 12400, sufijo: '+', label: 'hábitos completados' },
-  { valor: 92, sufijo: '%', label: 'sostiene su racha más de una semana' },
+  { valor: 92, sufijo: '%', label: 'de los usuarios sostiene su racha más de una semana' },
   { valor: 30, sufijo: '+', label: 'marcas aliadas con beneficios' },
 ]
 

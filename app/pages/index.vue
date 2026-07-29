@@ -1,8 +1,13 @@
 <template>
   <div>
+    <a href="#contenido"
+      class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:bg-green-dark focus:rounded-full focus:text-light focus:text-sm focus:font-semibold focus:px-5 focus:py-3">
+      Saltar al contenido
+    </a>
+
     <Header />
 
-    <main>
+    <main id="contenido">
       <Hero />
 
       <div class="hidden lg:block h-dvh" aria-hidden="true" />
@@ -14,23 +19,18 @@
         <Cierre />
       </div>
     </main>
+
+    <!-- Fuera de <main> para que mapee al landmark contentinfo -->
+    <AppFooter class="relative z-10" />
   </div>
 </template>
 
 <script setup>
-const APP_URL = 'https://suma-proyecto-final.vercel.app'
-
-const { origin } = useRequestURL()
-const canonica = `${origin}/`
-const imagen = `${origin}/og-suma.jpg`
+const { siteUrl: siteUrlRaw, appUrl } = useRuntimeConfig().public
+const siteUrl = sinBarraFinal(siteUrlRaw)
 
 useHead({
-  link: [{ rel: 'canonical', href: canonica }],
-  meta: [
-    { property: 'og:url', content: canonica },
-    { property: 'og:image', content: imagen },
-    { name: 'twitter:image', content: imagen },
-  ],
+  link: [{ rel: 'canonical', href: `${siteUrl}/` }],
   script: [
     {
       type: 'application/ld+json',
@@ -39,29 +39,33 @@ useHead({
         '@graph': [
           {
             '@type': 'Organization',
-            '@id': `${origin}/#organizacion`,
+            '@id': `${siteUrl}/#organizacion`,
             name: 'suma',
-            url: origin,
-            logo: `${origin}/images/isotipo.svg`,
+            url: siteUrl,
+            logo: `${siteUrl}/apple-touch-icon.png`,
+            description: 'App de hábitos saludables que premia la constancia con recompensas de marcas aliadas.',
           },
           {
             '@type': 'WebSite',
-            '@id': `${origin}/#sitio`,
-            url: origin,
+            '@id': `${siteUrl}/#sitio`,
+            url: siteUrl,
             name: 'suma',
             inLanguage: 'es-AR',
-            publisher: { '@id': `${origin}/#organizacion` },
+            publisher: { '@id': `${siteUrl}/#organizacion` },
           },
           {
-            '@type': 'MobileApplication',
+            '@type': 'WebApplication',
+            '@id': `${siteUrl}/#app`,
             name: 'suma',
             applicationCategory: 'HealthApplication',
             operatingSystem: 'Web',
-            url: APP_URL,
+            browserRequirements: 'Requiere JavaScript',
+            url: appUrl,
+            installUrl: appUrl,
             inLanguage: 'es-AR',
             description: 'App de hábitos saludables que premia tu constancia con recompensas canjeables de marcas aliadas.',
             offers: { '@type': 'Offer', price: '0', priceCurrency: 'ARS' },
-            publisher: { '@id': `${origin}/#organizacion` },
+            publisher: { '@id': `${siteUrl}/#organizacion` },
           },
         ],
       }),

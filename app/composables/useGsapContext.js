@@ -13,8 +13,4 @@ export function useGsapContext(root, setup) {
     ctx?.revert()
     ctx = null
   })
-
-  return {
-    getContext: () => ctx,
-  }
 }

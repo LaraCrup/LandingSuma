@@ -11,25 +11,14 @@
         suma
       </h2>
 
-      <NuxtLink to="https://suma-proyecto-final.vercel.app/iniciar-sesion" target="_blank" rel="noopener"
+      <NuxtLink :to="appUrl" target="_blank" rel="noopener"
         class="tipo-in flex items-center gap-2.5 relative bg-accent hover:bg-light rounded-full text-green-dark text-base lg:text-lg font-bold transition-colors duration-200 px-8 lg:px-10 py-3.5 lg:py-4">
-        <NuxtImg src="/images/download-dark.svg" alt="" class="w-4 h-4" />
-        Descargar
+        <img src="/images/download-dark.svg" alt="" class="w-4 h-4" />
+        Descargar suma<span class="sr-only"> (abre en una pestaña nueva)</span>
       </NuxtLink>
     </div>
 
-    <footer class="w-full border-t border-light/10 mt-16 lg:mt-24 px-5 pt-5 pb-8 lg:pb-10 relative z-[1]">
-      <div class="w-full max-w-[75rem] flex flex-col sm:flex-row justify-between items-center gap-2 mx-auto">
-        <div class="flex items-center gap-2.5 order-2 sm:order-1">
-          <NuxtImg src="/images/isotipo.svg" alt="suma" class="h-6" />
-          <p class="text-xs text-light/50">© {{ anio }} Suma. Todos los derechos reservados.</p>
-        </div>
-        <nav aria-label="Redes sociales" class="flex items-center gap-5 order-1 sm:order-2">
-          <NuxtLink to="#" class="text-sm text-light/70 hover:text-accent transition-colors duration-200">Instagram</NuxtLink>
-          <NuxtLink to="#" class="text-sm text-light/70 hover:text-accent transition-colors duration-200">TikTok</NuxtLink>
-        </nav>
-      </div>
-    </footer>
+    <div class="h-16 lg:h-24" />
   </section>
 </template>
 
@@ -60,7 +49,7 @@ const brillos = [
   { left: '84%', top: '76%', size: 28, op: 0.45, desdeSm: true },
 ]
 
-const anio = new Date().getFullYear()
+const { appUrl } = useRuntimeConfig().public
 
 const root = useTemplateRef('root')
 const titleRef = useTemplateRef('titleRef')
@@ -84,10 +73,22 @@ useGsapContext(root, (ctx) => {
 
   gsap.set('.tipo-in', { opacity: 0, y: 30 })
 
+  // El botón "Descargar" vive en .tipo-in: si SplitText o las fuentes fallan, tiene que aparecer igual
+  let revelado = false
+  const revelarBoton = () => {
+    if (revelado) return
+    revelado = true
+    gsap.to('.tipo-in', { opacity: 1, y: 0, duration: 0.8, stagger: 0.15 })
+  }
+  const salvavidas = setTimeout(revelarBoton, 2500)
+  ctx.add(() => () => clearTimeout(salvavidas))
+
   document.fonts.ready.then(() => {
-    if (!titleRef.value) return
+    if (!titleRef.value) return revelarBoton()
     const split = new SplitText(titleRef.value, { type: 'chars' })
     ctx.add(() => {
+      revelado = true
+      clearTimeout(salvavidas)
       const tl = gsap.timeline({
         scrollTrigger: { trigger: root.value, start: 'top 70%' },
         defaults: { ease: 'power4.out' },
@@ -95,7 +96,7 @@ useGsapContext(root, (ctx) => {
       tl.from(split.chars, { yPercent: 120, opacity: 0, rotation: 6, duration: 1, stagger: 0.06 })
         .to('.tipo-in', { opacity: 1, y: 0, duration: 0.8, stagger: 0.15 }, 0.5)
     })
-  })
+  }).catch(revelarBoton)
 })
 </script>
 

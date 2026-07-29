@@ -5,12 +5,20 @@
       <div class="w-full h-32 flex flex-col items-center justify-center bg-gradient-secondary p-5">
         <p class="min-h-[2lh] flex items-center justify-center font-heading text-xl text-light font-bold text-center leading-tight">{{ premio.nombre }}</p>
       </div>
-      <canvas ref="canvas"
+      <!-- La marca solo existía pintada en el canvas: invisible para lectores de pantalla y buscadores -->
+      <span class="sr-only">Beneficio de {{ premio.marca.nombre }}. {{ premio.requisito }}.</span>
+      <canvas ref="canvas" aria-hidden="true"
         class="absolute inset-0 w-full h-full touch-pan-y cursor-grab active:cursor-grabbing"
         :class="revelado ? 'pointer-events-none' : ''" />
+
+      <!-- Rascar es un gesto de trayectoria: hace falta una alternativa accesible por teclado -->
+      <button v-if="!revelado" type="button" @click="revelarTodo"
+        class="sr-only focus:not-sr-only focus:absolute focus:z-10 focus:inset-x-4 focus:top-4 focus:bg-green-dark focus:rounded-full focus:text-light focus:text-sm focus:font-semibold focus:px-4 focus:py-2">
+        Revelar el beneficio de {{ premio.marca.nombre }}
+      </button>
     </div>
 
-    <div class="h-[62px] border-t border-primary/10">
+    <div class="h-[62px] border-t border-primary/10" role="status">
       <Transition name="listo" mode="out-in">
         <span v-if="revelado"
           class="w-full h-full flex items-center justify-center bg-accent text-base text-green-dark font-bold px-4">
@@ -85,6 +93,12 @@ function pintarFoil() {
   }
 }
 
+function revelarTodo() {
+  if (revelado.value) return
+  revelado.value = true
+  if (canvas.value) gsap.to(canvas.value, { opacity: 0, duration: 0.5, ease: 'power2.out' })
+}
+
 let cleanup = null
 
 function conectarRasca() {
@@ -123,10 +137,7 @@ function conectarRasca() {
     for (let i = 3; i < data.length; i += 64) {
       if (data[i] === 0) transparentes++
     }
-    if (transparentes / (data.length / 64) > 0.60) {
-      revelado.value = true
-      gsap.to(el, { opacity: 0, duration: 0.5, ease: 'power2.out' })
-    }
+    if (transparentes / (data.length / 64) > 0.60) revelarTodo()
   }
 
   const empezar = (e) => { rascando = true; ultimo = null; borrar(punto(e)) }

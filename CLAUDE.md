@@ -8,8 +8,11 @@ email + número de corredor y valida contra Supabase para retirar su premio en e
 - **Nuxt 4** + Vue 3 + `<script setup>` (JS, nunca `lang="ts"`)
 - **Tailwind v3** vía `@nuxtjs/tailwindcss` + `tailwind.config.js`
   ⚠️ Contra la preferencia global (v4 CSS-first). Es el patrón vigente acá; migrar es otra tarea.
-- **Supabase** (`@nuxtjs/supabase`) — validación de participantes vía RPC `redeem_prize`
+- **Supabase** (`@nuxtjs/supabase`) — validación de participantes vía RPC `redeem_prize`.
+  `useSsrCookies: false` + `clientOptions.auth.persistSession: false`: no hay login acá.
+  ⚠️ La clave del módulo es `clientOptions`, **no** `options` (esa se ignora en silencio).
 - **GSAP** (ScrollTrigger, SplitText) + **Lenis** para scroll suave
+- **`@nuxt/fonts`** — Montserrat Alternates + Quicksand auto-hospedadas (no hay link a Google)
 - **npm**, no pnpm (heredado del proyecto)
 
 ## Convenciones
@@ -29,8 +32,8 @@ sm: 480px | tab: 600px | md: 768px | mdlg: 992px | lg: 1080px | xl: 1280px | xxl
 short: (max-height: 860px)   // ← custom, ver abajo
 ```
 
-`tab` y `mdlg` son custom. `mdlg` (992px) es el corte mobile→desktop de **Recompensas y
-Reviews** solamente (el resto cambia en `lg`); `tab` existe para afinar los carruseles.
+`tab` y `mdlg` son custom. `mdlg` (992px) es el corte mobile→desktop de **Recompensas**
+solamente (el resto cambia en `lg`).
 
 ### Mobile y desktop son layouts distintos (no romper)
 
@@ -42,8 +45,8 @@ Al tocar mobile, dejar desktop EXACTO; y al revés.
 |---|---|---|
 | Hero | 2 filas horizontales de fotos | 3 columnas verticales |
 | ComoFunciona | vertical: título → números → título del paso → phone | 2 columnas + hilo SVG |
-| Recompensas | carousel con flechas | grid de 3 |
-| Reviews | carousel con swipe | 2 marquees animadas |
+| Recompensas | 3 cards apiladas (`flex-col`) | grid de 3 |
+| Reviews | 2 marquees animadas (mismo markup en todos los anchos) | ídem |
 
 ### El problema del alto (leer antes de tocar el hero)
 
@@ -51,7 +54,7 @@ Los breakpoints de Tailwind son **de ancho**. Una MacBook Pro (1512×945) y un d
 grande (1920×1080) caen ambos en `xl`/`xxl` y reciben las mismas medidas — pero difieren
 **135px de alto**. El hero es `min-h-dvh`: lo que sobra en desktop, no entra en Mac.
 
-Por eso existe `short: (max-height: 1000px)`. Se combina con los de ancho:
+Por eso existe `short: (max-height: 860px)`. Se combina con los de ancho:
 
 ```html
 xxl:w-[285px] xxl:short:w-[265px]    <!-- desktop grande vs Mac -->
@@ -104,56 +107,72 @@ cambio no hiciera nada).
 
 ```
 app/
-  pages/index.vue          Header + main (Hero → ComoFunciona → Recompensas → Reviews) + Cierre
+  app.vue                  Layout raíz (AppCursor + NuxtPage). Sin <style>: todo el CSS global
+                           vive en assets/css/main.css
+  error.vue                404 / 500 en español (sin esto, Nuxt muestra su página en inglés)
+  pages/index.vue          Skip link + Header + main (Hero → ComoFunciona → Recompensas →
+                           Reviews → Cierre) + AppFooter + JSON-LD
   components/
     Header.vue             Píldora flotante sticky, transparente salvo el pill interno
     Hero.vue               Contenido + form de canje a la izq, fotos en loop a la der
     ComoFunciona.vue       Recorrido interactivo: pasos + PhoneShell que se usa de verdad
     Recompensas.vue        "Rascá y descubrí": canvas que se rasca y revela el beneficio
-    Reviews.vue            Reviews (carousel o marquees según viewport) + contadores animados
-    Cierre.vue             "suma." tipográfico enorme + botón "Descargar" + footer (lo incluye)
-    RedeemForm.vue         Form de canje con modales (compartido; lo usa Hero)
+    Reviews.vue            Reviews en 2 marquees + contadores animados
+    Cierre.vue             "suma" tipográfico enorme + botón "Descargar suma"
+    AppFooter.vue          Pie de página (ver abajo por qué está separado de Cierre)
+    RedeemForm.vue         Form de canje (compartido; lo usa Hero)
+    ModalDialog.vue        Modal accesible reutilizable (lo usa RedeemForm ×2)
     PhoneShell.vue         Marco del iPhone (compartido; lo usa ComoFunciona)
     HabitCard.vue          Card de hábito con swipe (compartido; UI real de la app Suma)
-    RascaCard.vue          Card de la rasca con su canvas (la usan grid y carousel)
-    CarouselStatic.vue     Carousel con drag/swipe, flechas y slidesPerView (Recompensas, Reviews)
-    MarqueeReactive.vue    Marquee con velocidad reactiva al scroll (lo usa Reviews en mdlg+)
+    RascaCard.vue          Card de la rasca con su canvas (la usa Recompensas)
+    MarqueeReactive.vue    Marquee con velocidad reactiva al scroll (lo usa Reviews)
     AppCursor.client.vue   Cursor custom (solo pointer fino; se monta en app.vue)
   composables/
     useGsapContext.js      Wrapper gsap.context con auto-cleanup
     useScrollVelocity.js   Velocidad de scroll compartida (la consume MarqueeReactive)
   plugins/
     gsap.client.js         registerPlugin(ScrollTrigger, SplitText)
-    lenis.client.js        Scroll suave
+    lenis.client.js        Scroll suave (no se inicializa con prefers-reduced-motion)
+server/routes/
+  robots.txt.ts            Generados desde runtimeConfig.public.siteUrl, para que la
+  sitemap.xml.ts           directiva Sitemap y el <loc> sigan al dominio real
 ```
 
-Imágenes de hábitos en `public/images/habitos/` nombradas **`1.jpg` … `20.jpg`** (3:4 vertical).
-Para sumar más: agregar archivo + su `{ src }` al array `filas` de `Hero.vue`.
+Imágenes de hábitos en `public/images/habitos/`, con **nombre descriptivo en kebab-case**
+(`correr-parque.webp`, `preparar-viandas.webp`…) — no numeradas: el nombre de archivo lo lee
+Google Imágenes y evita tener que abrirlas para saber cuál es cuál. 960×1280, 3:4 vertical,
+~100 KB c/u. **Solo se versiona la versión optimizada**; los originales de cámara (2,9 MB c/u)
+no van al repo. Para sumar más: optimizar con sharp (receta en el README), guardar el `.webp`
+y agregar su `{ src, alt }` al array `filas` de `Hero.vue`.
+El `alt` es obligatorio y descriptivo, aunque el contenedor sea `aria-hidden`: son 3 copias
+duplicadas de cada foto en un loop decorativo, así que el lector de pantalla no las anuncia,
+pero el `alt` sirve igual para buscadores y si algún día se saca el `aria-hidden`.
+
 UI de la app (`PhoneShell`, `HabitCard`) replica la app Suma real (repo de referencia:
-`~/Desktop/La/Da Vinci/Suma`, misma paleta Tailwind). `Cierre` ya trae su footer: NO montar
-un `<Footer>` aparte.
+`~/Desktop/La/Da Vinci/Suma`, misma paleta Tailwind).
 
-Los botones "Descargar" (Header y Cierre) apuntan a
-`https://suma-proyecto-final.vercel.app/iniciar-sesion`.
+**El footer ya NO está dentro de `Cierre`**: un `<footer>` anidado en `<section>`, y encima
+dentro de `<main>`, no mapea al landmark `contentinfo`. Por eso `AppFooter` se monta en
+`index.vue` **después de `</main>`**. No volver a meterlo adentro de `Cierre`.
 
-### CarouselStatic
+Los botones "Descargar suma" (Header y Cierre) leen la URL de
+`runtimeConfig.public.appUrl` — no hardcodearla de nuevo.
 
-Portado de `~/Desktop/La/TEX/WebTEX/app/components/carousel/Static.vue`. Arrastra con
-`mousedown`/`touchstart` y **clasifica la dirección del gesto** en el primer movimiento
-(`dx > dy`): si es vertical suelta el drag para que la página siga scrolleando. Eso es lo
-que hace que el carrusel no secuestre el scroll en mobile — no usar `snap-x` ni
-`touch-action` contradictorios, que fue el bug original.
+### ModalDialog
+
+Modal accesible reutilizable. Encapsula todo lo que un modal necesita y que es fácil olvidar:
+`role="dialog"` + `aria-modal`, `aria-labelledby`/`aria-describedby`, **foco atrapado** con
+ciclado de Tab, foco al botón de cerrar al abrir, **devolución del foco al disparador** al
+cerrar (con `nextTick`, porque el disparador suele seguir `disabled` mientras carga), cierre
+con `Escape` y bloqueo del scroll del `body` (indispensable con Lenis: si no, el fondo
+scrollea detrás del modal).
 
 ```vue
-<CarouselStatic arrows :gap="20" :slides-per-view="{ base: 1.3, sm: 1.8, tab: 2.2, md: 2.6 }"
-  track-class="pb-7" />
+<ModalDialog :open="showSuccessModal" titulo="¡Felicitaciones!" accion="¡Voy al stand!"
+  icono="🎉" icono-fondo="bg-accent" @close="cerrar">
+  Texto con <span class="text-primary">markup</span> (slot); o usar la prop `mensaje` si es plano.
+</ModalDialog>
 ```
-
-- `slidesPerView` acepta decimales (peek) y **hereda** del breakpoint anterior si se omite.
-- El componente fija el ancho de los slides por CSS (`100cqw`): NO ponerles clase de ancho.
-- `edge`/`edgeLg` son el respiro de los extremos. Va como **margin del primer/último slide**,
-  no como padding del contenedor: con padding, el último slide queda recortado al final.
-- `trackClass="pb-7"` da aire abajo cuando los slides tienen sombra (el `overflow-x` la corta).
 
 ### Parallax del Hero (patrón Mecha — no romper)
 
@@ -171,6 +190,13 @@ Patrón copiado de `~/Desktop/Estudio/Kase/WebMecha`.
   `gsap.utils.wrap(-dist, 0)` lo envuelve → siempre hay contenido llenando la vista, sin
   hueco ni salto. Se **re-mide cuando cargan las imágenes** (si no, la medida da mal y el
   loop no arranca). Con 2 copias dejaba un hueco; por eso 3.
+  La re-medición ocurre **una sola vez**, cuando ya cargaron todas (contador `pendientes`).
+  Dos cosas que ya se probaron y **rompen el loop**:
+  1. Re-armar en cada carga suelta (debounce): el loop se reinicia y se ve un salto cada tanto.
+     Si hay que re-armar igual (resize), `armarLoops` guarda y restaura el `progress()`.
+  2. `loading="lazy"` en estas fotos: el track se mueve infinitamente, así que entran fotos al
+     viewport todo el tiempo → cargas continuas → re-mediciones continuas. Y las del layout
+     oculto no cargan nunca, así que el contador jamás llegaría a cero.
   Hay **dos pistas** (`.fila` horizontal en mobile, `.columna` vertical en desktop): el array
   `pistas` arma el loop sobre el eje que corresponda (`x`/`offsetLeft` vs `y`/`offsetTop`) y
   saltea la que esté oculta (`!el.offsetParent`). Se re-arma en `resize` para que funcione al
@@ -183,6 +209,12 @@ Patrón copiado de `~/Desktop/Estudio/Kase/WebMecha`.
 
 - **`overflow-x-clip` en `app.vue`**: contenido puede desbordar el viewport. Es `clip` y **no
   `hidden`** porque `hidden` rompe el `position: sticky` del header.
+
+- **`.col-in` (Hero) y `.tipo-in` (Cierre) arrancan en `opacity: 0`** y se revelan dentro del
+  callback de `document.fonts.ready`. Ahí adentro viven el **form de canje** y el botón
+  "Descargar": si SplitText tira o las fuentes nunca resuelven, quedaban invisibles para
+  siempre. Por eso hay un `setTimeout` salvavidas de 2.5 s + `.catch()` que los revela igual.
+  **No sacar el salvavidas.**
 
 - **`PhoneShell` + `HabitCard` son código, no imagen.** UI real de la app en HTML/CSS con
   animación GSAP. Tipografías en px fijos: por debajo de ~255px de ancho el layout se rompe.
@@ -215,6 +247,16 @@ Patrón copiado de `~/Desktop/Estudio/Kase/WebMecha`.
   El `<p>` del nombre lleva `min-h-[2lh]` para que las 3 cards midan igual (si no, el nombre
   de una línea las desnivela y el canvas deja de tapar su contenedor) + `flex items-center`
   para que los nombres de una sola línea queden centrados en esa caja de 2 líneas.
+  Rascar es un gesto de trayectoria y no existe en teclado (WCAG 2.1.1 / 2.5.1): por eso hay
+  un botón "Revelar el beneficio de X" que es `sr-only` hasta que recibe foco, y el nombre de
+  la marca —que solo existía pintado en el canvas— va además como texto `sr-only`.
+
+- **A11y transversal (no romper):** `main.css` define el `:focus-visible` global y un bloque
+  `prefers-reduced-motion` que neutraliza **todas** las transiciones y animaciones CSS de una
+  (modales, toast, transiciones de pantalla, rasca, swipe). No hace falta repetir el guard en
+  cada `<style scoped>`; lo que sí necesita guard propio es el JS de GSAP.
+  Lenis directamente **no se inicializa** con `prefers-reduced-motion`.
+  Las marquees se pausan con `pointerenter`/`focusin` (WCAG 2.2.2).
 
 ## Mecánicas por sección (estado al día)
 
@@ -226,8 +268,9 @@ Patrón copiado de `~/Desktop/Estudio/Kase/WebMecha`.
   (0) crear hábito, (1) completar los hábitos, (2) racha + botón "Ver mis recompensas" con
   gradiente animado que fluye, (3) beneficios canjeables. Datos coherentes: `RACHA_BASE=5`,
   `PUNTOS_BASE=280` (+40/hábito) → premio de 250 canjeable de entrada, 400 con todos hechos.
-  Paso activo con gradiente `from-accent/70 via-accent/40 to-green-light/25`; inactivos
-  blancos. `canjeados` es un array que bloquea el re-canje y muestra "✓ Canjeado".
+  Paso activo `bg-green-dark`, ya recorridos `bg-primary` (era `green-dark/45`, que daba
+  2.03:1 de contraste), pendientes blancos. `canjeados` bloquea el re-canje.
+  La unidad de gamificación es **XP** en toda la sección (antes convivían "pts" y "XP").
   El `short` achica phone/gaps/padding; ver reglas de alto arriba.
 - **Recompensas:** solo título "Rascá tu racha y descubrí el beneficio". 3 `RascaCard` con
   canvas de scratch-foil (gris plata + logo real de la marca al 55% + "Rascá acá"). Pincel
@@ -236,25 +279,44 @@ Patrón copiado de `~/Desktop/Estudio/Kase/WebMecha`.
   pintado en el canvas, si se pone también abajo se asoma por los huecos al rascar.
   La banda inferior (62px) es un solo `span` que la llena entera: nivel requerido en reposo,
   `bg-accent` + "Desbloqueado" al revelar, con transición `translateY`.
-- **Reviews:** título + reviews (carousel o marquees según viewport) + 3 stat-cards sobre
-  `green-dark` con contador animado (label `text-base lg:text-lg text-light`).
-- **Cierre:** "suma." tipográfico gigante + botón "Descargar" + footer. Brillos flotantes,
+- **Reviews:** título + 2 marquees de reseñas (mismo markup en todo ancho) + 3 stat-cards
+  sobre `green-dark` con contador animado. Cada reseña es `<figure>` + `<blockquote>` +
+  `<figcaption>`. El degradado de los bordes va como `style` en el `<MarqueeReactive>` y
+  funciona porque el componente re-bindea `$attrs.style` — tiene `inheritAttrs: false`, así
+  que si se agrega otro atributo hay que re-bindearlo a mano o se descarta en silencio.
+- **Cierre:** "suma" tipográfico gigante + botón "Descargar suma". Brillos flotantes,
   atenuados en mobile (`calc(var(--op) * 0.45)`) porque ahí tapan el botón.
+  El footer ya no vive acá (ver Arquitectura).
 
 ## Estado / pendientes
 
 - ✅ Toda la landing iterada y **full responsive** (mobile-first, con markup propio de mobile
-  y desktop en las 4 secciones grandes — ver tabla arriba).
+  y desktop en Hero, ComoFunciona y Recompensas — ver tabla arriba).
 - ✅ `.env` configurado con las claves reales (key `sb_publishable_…`). La RPC `redeem_prize`
   responde OK; con datos inexistentes devuelve `"not_found"`, que el form mapea a su modal.
-- ✅ SEO completo: og:image propia (`public/og-suma.jpg` 1200×630) + apple-touch-icon,
-  canonical y `og:url` dinámicos con `useRequestURL()`, JSON-LD (Organization + WebSite +
-  MobileApplication) en `index.vue`, twitter card, `lang="es-AR"`.
+  El form manda el email en `toLowerCase()`, valida formato con regex, tiene timeout de 15 s
+  y mapea **solo** `ok` / `already_redeemed` / `not_found`; cualquier otro valor cae en el
+  modal genérico de error (antes decía "no figurás en el listado", que podía ser falso).
+- ✅ SEO: og:image propia (`public/og-suma.jpg` 1200×630) + apple-touch-icon + favicon SVG +
+  `site.webmanifest`, canonical/`og:url` desde **`NUXT_PUBLIC_SITE_URL`** (fijo, no
+  `useRequestURL()`: con el origin del request cada preview de Vercel se auto-canonicalizaba),
+  JSON-LD (Organization + WebSite + **WebApplication**) en `index.vue`, `robots.txt` y
+  `sitemap.xml` como rutas de Nitro, twitter card, `lang="es-AR"`.
   **Sin `Review`/`aggregateRating` a propósito:** las reseñas de la sección Reviews son
   inventadas y marcarlas como datos estructurados reales es spam de rich snippets.
-- ✅ Fotos de hábitos optimizadas vía `@nuxt/image`: los originales pesan 52 MB en total
-  (~3 MB c/u, 1856×2304). Los `NuxtImg` del Hero llevan `width`/`height`/`format="webp"`
-  → 28 KB por foto. **Si se agregan fotos, copiar esos props o vuelve el problema.**
-- ⏳ Los links de Instagram y TikTok del footer apuntan a `#`. Al ponerlos, sumarlos también
-  como `sameAs` en el `Organization` del JSON-LD de `index.vue`.
-- ⏳ `README.md` sigue siendo el starter de Nuxt sin tocar.
+- ✅ Fotos optimizadas **en origen**: 20 WebP de 960×1280 (~2 MB en total, antes 52 MB de JPG
+  a 1856×2304). Van con `decoding="async"` (sin `lazy`, ver arriba) y con `alt` descriptivo;
+  los `width`/`height` (300×400 mobile, 480×640 desktop) son exactamente 2× el tamaño de
+  render, así que ya cubren retina. Los logos de marca también se redujeron (bhumi 150 → 26 KB).
+- ✅ `:focus-visible` global **sin `border-radius` propio**: si se le pone uno, el outline le
+  cuadra las esquinas a los inputs `rounded-full`. Los `input` lo suprimen porque ya traen su
+  propio anillo (`focus:ring-2`) con el radio correcto.
+- ⏳ Los links de Instagram y TikTok de `AppFooter` apuntan a `#`. Al ponerlos, sumarlos
+  también como `sameAs` en el `Organization` del JSON-LD de `index.vue`.
+- ⏳ `NUXT_PUBLIC_SITE_URL` tiene como default `https://landing-suma.vercel.app`, que es una
+  **suposición**. Hay que confirmarlo contra el dominio real y cargarlo en Vercel.
+- ⏳ Los CTA dicen "Descargar suma" pero llevan a `…/iniciar-sesion`: el texto no describe el
+  destino (WCAG 2.4.4). Falta decidir si cambia el texto o el destino.
+- ⏳ `npm audit` reporta vulnerabilidades en dependencias transitivas de build (sharp/libvips
+  vía `@nuxt/image`, tar, brace-expansion, esbuild). No hay fix sin `--force`, que rompería
+  `@nuxt/image`. Nada de eso llega al bundle del cliente.

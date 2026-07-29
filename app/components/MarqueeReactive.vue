@@ -3,8 +3,9 @@
     ref="root"
     class="w-full overflow-hidden relative"
     :class="$attrs.class"
+    :style="$attrs.style"
     :aria-label="ariaLabel"
-    role="marquee"
+    role="group"
   >
     <div
       ref="track"
@@ -15,17 +16,9 @@
         class="flex shrink-0 items-center"
         :class="copyClass"
       >
-        <template v-for="(item, i) in items" :key="`a-${i}`">
-          <div class="shrink-0" :class="itemClass">
-            <slot name="item" :item="item" :index="i">{{ item }}</slot>
-          </div>
-          <span
-            v-if="separator"
-            class="shrink-0 select-none"
-            :class="separatorClass"
-            aria-hidden="true"
-          >{{ separator }}</span>
-        </template>
+        <div v-for="(item, i) in items" :key="`a-${i}`" class="shrink-0">
+          <slot name="item" :item="item" :index="i">{{ item }}</slot>
+        </div>
       </div>
 
       <div
@@ -33,16 +26,9 @@
         class="flex shrink-0 items-center"
         :class="copyClass"
       >
-        <template v-for="(item, i) in items" :key="`b-${i}`">
-          <div class="shrink-0" :class="itemClass">
-            <slot name="item" :item="item" :index="i">{{ item }}</slot>
-          </div>
-          <span
-            v-if="separator"
-            class="shrink-0 select-none"
-            :class="separatorClass"
-          >{{ separator }}</span>
-        </template>
+        <div v-for="(item, i) in items" :key="`b-${i}`" class="shrink-0">
+          <slot name="item" :item="item" :index="i">{{ item }}</slot>
+        </div>
       </div>
     </div>
   </div>
@@ -55,11 +41,8 @@ const props = defineProps({
   items: { type: Array, required: true },
   speed: { type: Number, default: 80 },
   direction: { type: String, default: 'left', validator: v => ['left', 'right'].includes(v) },
-  separator: { type: String, default: '•' },
   velocityFactor: { type: Number, default: 0.3 },
   copyClass: { type: String, default: 'gap-12' },
-  itemClass: { type: String, default: '' },
-  separatorClass: { type: String, default: 'opacity-40' },
   ariaLabel: { type: String, default: 'Contenido en movimiento continuo' },
 })
 
@@ -123,9 +106,22 @@ useGsapContext(root, (ctx) => {
     setTimeScale(target)
   })
 
+  // WCAG 2.2.2: el usuario tiene que poder frenar el movimiento para leer las reseñas
+  const pausar = () => tl.pause()
+  const reanudar = () => tl.play()
+  const el = root.value
+  el.addEventListener('pointerenter', pausar)
+  el.addEventListener('pointerleave', reanudar)
+  el.addEventListener('focusin', pausar)
+  el.addEventListener('focusout', reanudar)
+
   ctx.add(() => {
     ro.disconnect()
     unsubscribe()
+    el.removeEventListener('pointerenter', pausar)
+    el.removeEventListener('pointerleave', reanudar)
+    el.removeEventListener('focusin', pausar)
+    el.removeEventListener('focusout', reanudar)
   })
 })
 </script>

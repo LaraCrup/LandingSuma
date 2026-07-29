@@ -22,3 +22,9 @@ logs
 .env
 .env.*
 !.env.example
+
+# Fotos fuente sin optimizar (en public/ van las versiones webp redimensionadas)
+_originales
+
+# Checklist personal de entrega, no forma parte del proyecto
+CHECKLIST-ENTREGA.md

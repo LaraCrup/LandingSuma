@@ -23,8 +23,8 @@ import { gsap } from 'gsap'
 import { SplitText } from 'gsap/SplitText'
 
 const premios = [
-  { nombre: '5% OFF en zapatillas deportivas', requisito: 'Nivel 1', marca: { nombre: 'Nike', logo: '/images/marcas/nike.png' } },
-  { nombre: 'Clase privada de yoga personalizada', requisito: 'Nivel 4', marca: { nombre: 'Bhumi Yoga Studio', logo: '/images/marcas/bhumi.png' } },
+  { nombre: '5% OFF en zapatillas deportivas', requisito: 'Nivel 1', marca: { nombre: 'Nike', logo: '/images/marcas/nike.webp' } },
+  { nombre: 'Clase privada de yoga personalizada', requisito: 'Nivel 4', marca: { nombre: 'Bhumi Yoga Studio', logo: '/images/marcas/bhumi.webp' } },
   { nombre: 'Programa de nutrición personalizado', requisito: 'Nivel 8', marca: { nombre: 'Star Nutrition', logo: '/images/marcas/star-nutrition.webp' } },
 ]
 

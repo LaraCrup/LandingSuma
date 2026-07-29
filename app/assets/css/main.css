@@ -34,3 +34,36 @@ html.custom-cursor,
 html.custom-cursor * {
     cursor: none !important;
 }
+
+/* Sin border-radius propio: el outline sigue el radio del elemento y no le cuadra las esquinas */
+:focus-visible {
+    outline: 2px solid #157A6E;
+    outline-offset: 2px;
+}
+
+/* Los inputs ya traen su propio anillo de foco con el radio correcto */
+input:focus-visible {
+    outline: none;
+}
+
+.bg-green-dark :focus-visible,
+[data-cursor-dark] :focus-visible {
+    outline-color: #D7F560;
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+    html,
+    body {
+        scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}

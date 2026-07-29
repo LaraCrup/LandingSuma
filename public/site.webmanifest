@@ -1,0 +1,23 @@
+{
+  "name": "suma — La constancia en tu bienestar merece recompensas",
+  "short_name": "suma",
+  "description": "Creá hábitos saludables y canjeá recompensas de marcas aliadas.",
+  "lang": "es-AR",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#F3FCF7",
+  "theme_color": "#12534C",
+  "icons": [
+    {
+      "src": "/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    },
+    {
+      "src": "/images/isotipo.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

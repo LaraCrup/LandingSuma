@@ -17,12 +17,13 @@
 
         <ul class="flex justify-center items-center gap-3 order-2 lg:hidden">
           <li v-for="(p, i) in pasos" :key="i">
-            <button @click="activo = i" :aria-current="activo === i" :aria-label="p.titulo"
+            <button type="button" @click="activo = i" :aria-current="activo === i"
+              :aria-label="`Paso ${i + 1}: ${p.titulo}`"
               :class="['w-14 h-14 short:w-12 short:h-12 flex justify-center items-center border border-transparent rounded-full font-heading text-xl short:text-lg font-medium tabular-nums transition-all duration-300',
                 activo === i
                   ? 'bg-green-dark text-accent shadow-[0_16px_34px_-24px_rgba(18,83,76,0.5)]'
                   : i < activo
-                    ? 'bg-green-dark/45 text-accent'
+                    ? 'bg-primary text-accent'
                     : 'bg-light text-primary hover:bg-light/80']">
               0{{ i + 1 }}
             </button>
@@ -38,11 +39,12 @@
 
         <ul class="hidden lg:flex flex-col gap-2.5 short:gap-2">
           <li v-for="(p, i) in pasos" :key="i" :ref="el => { if (el) pasoEls[i] = el }">
-            <button @click="activo = i" :aria-current="activo === i" :class="['w-full flex items-center gap-4 lg:gap-5 border rounded-2xl transition-all duration-300 px-4 lg:px-5 py-8 lg:py-10 short:py-8',
+            <button type="button" @click="activo = i" :aria-current="activo === i"
+              :class="['w-full flex items-center gap-4 lg:gap-5 border rounded-2xl transition-all duration-300 px-4 lg:px-5 py-8 lg:py-10 short:py-8',
               activo === i
                 ? 'border-transparent bg-green-dark shadow-[0_16px_34px_-24px_rgba(18,83,76,0.5)]'
                 : i < activo
-                  ? 'border-transparent bg-green-dark/45'
+                  ? 'border-transparent bg-primary'
                   : 'border-transparent bg-light hover:bg-light/80']">
               <span :class="['font-heading text-2xl font-medium leading-none tabular-nums',
                 i <= activo ? 'text-accent' : 'text-primary']">
@@ -65,15 +67,18 @@
 
               <template v-if="activo === 0">
                 <p class="font-heading text-base text-green-dark font-semibold">Nuevo hábito</p>
-                <input v-model="nuevoNombre" placeholder="Ej: Meditar 10 min"
-                  class="w-full border border-gray/60 rounded-xl text-sm font-semibold outline-none focus:border-primary px-3.5 py-3" />
-                <div class="flex justify-center gap-3">
-                  <button v-for="emoji in emojis" :key="emoji" @click="nuevoEmoji = emoji" :class="['w-9 h-9 flex items-center justify-center rounded-full text-base transition-colors duration-150',
-                    nuevoEmoji === emoji ? 'bg-accent' : 'bg-light']">
-                    {{ emoji }}
+                <label class="sr-only" :for="`${uid}-habito`">Nombre del hábito</label>
+                <input :id="`${uid}-habito`" v-model="nuevoNombre" placeholder="Ej.: Meditar 10 min"
+                  class="w-full border border-primary/40 rounded-xl text-sm font-semibold outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 placeholder:text-dark/65 px-3.5 py-3" />
+                <div class="flex justify-center gap-3" role="group" aria-label="Ícono del hábito">
+                  <button v-for="emoji in emojis" :key="emoji" type="button" @click="nuevoEmoji = emoji"
+                    :aria-label="nombresEmoji[emoji]" :aria-pressed="nuevoEmoji === emoji"
+                    :class="['w-9 h-9 flex items-center justify-center rounded-full text-base transition-colors duration-150',
+                      nuevoEmoji === emoji ? 'bg-accent' : 'bg-light']">
+                    <span aria-hidden="true">{{ emoji }}</span>
                   </button>
                 </div>
-                <button @click="crearHabito" :disabled="!nuevoNombre.trim()"
+                <button type="button" @click="crearHabito" :disabled="!nuevoNombre.trim()"
                   class="w-full bg-primary hover:bg-green-dark rounded-full text-sm text-light font-semibold transition-colors duration-200 active:scale-[0.98] disabled:opacity-40 py-3.5">
                   Crear hábito
                 </button>
@@ -91,22 +96,22 @@
                   <div class="flex justify-between items-center">
                     <span class="text-sm text-light/80">Racha actual</span>
                     <span class="flex items-center gap-1.5 text-base text-accent font-bold">
-                      <NuxtImg src="/images/brillo-accent.svg" alt="" class="w-4 h-4" />
+                      <img src="/images/brillo-accent.svg" alt="" class="w-4 h-4" />
                       {{ diasRacha }} días
                     </span>
                   </div>
                   <div class="flex justify-between">
                     <div v-for="(d, i) in ['L', 'M', 'M', 'J', 'V', 'S', 'D']" :key="i"
                       class="flex flex-col items-center gap-1.5">
-                      <span class="text-[11px] text-light/50">{{ d }}</span>
+                      <span class="text-[11px] text-light/75">{{ d }}</span>
                       <div
                         :class="['w-5 h-5 lg:w-6 lg:h-6 flex items-center justify-center rounded-full transition-colors duration-300', i < diasRacha ? 'bg-accent' : 'border border-light/25']">
-                        <NuxtImg v-if="i < diasRacha" src="/images/brillo-dark-green.svg" alt="" class="w-2.5 lg:w-3" />
+                        <img v-if="i < diasRacha" src="/images/brillo-dark-green.svg" alt="" class="w-2.5 lg:w-3" />
                       </div>
                     </div>
                   </div>
                 </div>
-                <button @click="next"
+                <button type="button" @click="next"
                   class="pulso-color w-full flex justify-center items-center rounded-full text-sm text-light font-semibold active:scale-[0.98] py-3">
                   Ver mis recompensas
                 </button>
@@ -115,13 +120,13 @@
               <template v-else>
                 <p class="font-heading text-base text-green-dark font-semibold">Beneficios</p>
                 <div class="flex justify-between items-center bg-green-dark rounded-2xl p-3.5 short:p-2.5">
-                  <span class="text-sm text-accent font-bold">Tus puntos</span>
+                  <span class="text-sm text-accent font-bold">Tus XP</span>
                   <span class="flex items-center gap-1.5 text-base text-accent font-bold">
-                    <NuxtImg src="/images/brillo-light-green.svg" alt="" class="w-4 h-4" />
+                    <img src="/images/brillo-light-green.svg" alt="" class="w-4 h-4" />
                     {{ puntos }} XP
                   </span>
                 </div>
-                <button v-for="premio in premios.slice(0, 2)" :key="premio.nombre" @click="canjear(premio)"
+                <button v-for="premio in premios" :key="premio.nombre" type="button" @click="canjear(premio)"
                   :disabled="puntos < premio.pts || canjeados.includes(premio.nombre)"
                   :class="['w-full flex flex-col gap-2.5 bg-light rounded-2xl transition-all duration-200 active:scale-[0.98] p-4 short:p-3',
                     puntos < premio.pts || canjeados.includes(premio.nombre) ? '' : 'hover:shadow-[0_10px_24px_-14px_rgba(18,83,76,0.5)]']">
@@ -132,8 +137,8 @@
                     <p class="min-w-0 flex-1 text-sm text-dark font-semibold text-left">{{ premio.nombre }}</p>
                   </div>
                   <span :class="['w-full rounded-full text-xs font-bold text-center whitespace-nowrap transition-colors duration-300 px-3 py-2',
-                    canjeados.includes(premio.nombre) ? 'bg-green-light text-light' : puntos >= premio.pts ? 'bg-accent text-green-dark' : 'bg-gray text-dark']">
-                    {{ canjeados.includes(premio.nombre) ? 'Canjeado' : puntos >= premio.pts ? 'Canjear' : premio.pts + ' pts' }}
+                    canjeados.includes(premio.nombre) ? 'bg-green-dark text-accent' : puntos >= premio.pts ? 'bg-accent text-green-dark' : 'bg-gray text-dark']">
+                    {{ canjeados.includes(premio.nombre) ? 'Canjeado' : puntos >= premio.pts ? 'Canjear' : premio.pts + ' XP' }}
                   </span>
                 </button>
               </template>
@@ -150,12 +155,19 @@
 import { gsap } from 'gsap'
 import { SplitText } from 'gsap/SplitText'
 
+const uid = useId()
+
 const emojis = ['🧘', '💧', '🏃', '📖']
+const nombresEmoji = {
+  '🧘': 'Meditación',
+  '💧': 'Hidratación',
+  '🏃': 'Correr',
+  '📖': 'Lectura',
+}
 
 const premios = [
-  { emoji: '🥤', nombre: '2x1 smoothies', marca: 'Marca aliada', pts: 250 },
-  { emoji: '🏋️', nombre: 'Pase de gym', marca: 'Marca aliada', pts: 400 },
-  { emoji: '🧦', nombre: '20% running', marca: 'Marca aliada', pts: 300 },
+  { emoji: '🥤', nombre: '2x1 en smoothies', pts: 250 },
+  { emoji: '🏋️', nombre: 'Pase de gym', pts: 400 },
 ]
 
 const habitos = ref([
@@ -191,7 +203,6 @@ const pasos = [
 ]
 
 function next() { if (activo.value < pasos.length - 1) activo.value++ }
-function prev() { if (activo.value > 0) activo.value-- }
 
 const canjeados = ref([])
 function canjear(premio) {
@@ -209,7 +220,7 @@ function mostrarToast(xpGanado, label) {
 let avanceTimer = null
 function onCompletado() {
   const faltan = habitos.value.length - completados.value
-  mostrarToast(30, faltan > 0 ? `¡Bien! Faltan ${faltan}` : '¡Todos completos! 🎉')
+  mostrarToast(30, faltan > 0 ? `¡Bien! ${faltan === 1 ? 'Falta 1' : `Faltan ${faltan}`}` : '¡Todos completos! 🎉')
   if (activo.value === 1 && todosHechos.value) {
     clearTimeout(avanceTimer)
     avanceTimer = setTimeout(next, 900)
@@ -309,7 +320,7 @@ useGsapContext(root, (ctx) => {
 }
 
 .pulso-color {
-  background-image: linear-gradient(100deg, #12534C, #157A6E, #499F68, #157A6E, #12534C);
+  background-image: linear-gradient(100deg, #12534C, #157A6E, #12534C, #157A6E, #12534C);
   background-size: 300% 100%;
   background-position: 0% 50%;
   animation: flujo-color 4s linear infinite;

@@ -1,42 +1,38 @@
 <template>
   <button ref="cardRef" type="button" :aria-pressed="modelValue"
     :aria-label="`${habit.name}: ${modelValue ? 'completado' : 'pendiente'}. Tocá o deslizá para ${modelValue ? 'desmarcar' : 'completar'}`"
-    :class="['w-full relative overflow-hidden flex justify-between items-center rounded-2xl transition-colors touch-pan-y',
-      modelValue ? 'bg-accent' : 'bg-midlight',
-      grande ? 'p-4 lg:p-5' : 'p-3']"
+    :class="['w-full relative overflow-hidden flex justify-between items-center rounded-2xl transition-colors touch-pan-y p-3',
+      modelValue ? 'bg-accent' : 'bg-midlight']"
     @click="onTap" @touchstart="onTouchStart" @touchend="onTouchEnd">
 
     <div v-if="fillVisible" class="absolute inset-y-0 left-0 bg-accent pointer-events-none"
       :class="soltando ? 'transition-[width] duration-150' : ''" :style="{ width: fillPercent + '%' }" />
 
-    <div class="min-w-0 flex flex-1 items-center relative" :class="grande ? 'gap-4' : 'gap-3'">
-      <div
-        :class="['flex flex-shrink-0 items-center justify-center rounded-full bg-gradient-secondary', grande ? 'w-12 lg:w-14 h-12 lg:h-14 text-2xl lg:text-3xl' : 'w-8 h-8 text-sm']">
+    <div class="min-w-0 flex flex-1 items-center relative gap-3">
+      <div class="w-8 h-8 flex flex-shrink-0 items-center justify-center rounded-full bg-gradient-secondary text-sm">
         {{ habit.icon }}
       </div>
       <div class="min-w-0">
-        <p :class="['text-start text-dark truncate', grande ? 'text-base lg:text-lg font-semibold' : 'text-sm font-semibold']">
+        <p class="text-start text-sm text-dark font-semibold truncate">
           {{ habit.name }}
         </p>
-        <p :class="['text-start text-green-dark', modelValue ? 'font-bold' : 'font-normal', grande ? 'text-sm' : 'text-xs']">
+        <p :class="['text-start text-xs text-green-dark', modelValue ? 'font-bold' : 'font-normal']">
           {{ modelValue ? habit.goal ?? 1 : 0 }}/{{ habit.goal ?? 1 }}
         </p>
       </div>
     </div>
 
-    <div class="flex items-center relative flex-shrink-0" :class="grande ? 'gap-3' : 'gap-2'">
+    <div class="flex items-center relative flex-shrink-0 gap-2">
       <div v-if="habit.streak" class="flex items-center gap-1">
-        <svg :class="grande ? 'w-3.5' : 'w-2'" viewBox="0 0 8 10" fill="#157A6E" aria-hidden="true">
+        <svg class="w-2" viewBox="0 0 8 10" fill="#157A6E" aria-hidden="true">
           <path d="M4.5 0C4.5 2 6.8 3.2 7.5 5.4 8.2 7.7 6.6 10 4 10 1.6 10 0 8.2 0 6.2 0 4.6 1 3.4 1.8 2.6c0 1 .4 1.7 1 2.1C2.6 3 3.4 1.2 4.5 0Z" />
         </svg>
-        <p :class="['text-green-dark font-semibold', grande ? 'text-sm' : 'text-xs']">{{ streakActual }}</p>
+        <p class="text-xs text-green-dark font-semibold">{{ streakActual }}</p>
       </div>
       <div
-        :class="['flex justify-center items-center rounded-full transition-colors',
-          modelValue ? 'bg-green-dark' : 'border border-gray',
-          grande ? 'w-9 lg:w-10 h-9 lg:h-10' : 'w-6 h-6']">
-        <NuxtImg :src="modelValue ? '/images/brillo-light-green.svg' : '/images/brillo.svg'" alt=""
-          :class="grande ? 'w-4' : 'w-3'" />
+        :class="['w-6 h-6 flex justify-center items-center rounded-full transition-colors',
+          modelValue ? 'bg-green-dark' : 'border border-gray']">
+        <img :src="modelValue ? '/images/brillo-light-green.svg' : '/images/brillo.svg'" alt="" class="w-3" />
       </div>
     </div>
   </button>
@@ -46,7 +42,6 @@
 const props = defineProps({
   habit: { type: Object, required: true },
   modelValue: { type: Boolean, default: false },
-  grande: { type: Boolean, default: false },
 })
 const emit = defineEmits(['update:modelValue', 'completed'])
 

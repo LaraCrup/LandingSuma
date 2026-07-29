@@ -21,7 +21,7 @@
             <span class="text-primary">recompensas</span>
           </h1>
           <p class="col-in max-w-[42ch] text-lg lg:text-xl text-green-dark font-semibold text-center lg:text-left">
-            Completá tus datos y retirá tu premio ahora.
+            Completá tus datos y canjeá tu premio ahora.
           </p>
         </div>
         <div class="col-in w-full max-w-[470px]">
@@ -36,8 +36,8 @@
           :data-dir="c % 2 === 0 ? 1 : -1">
           <div v-for="(foto, f) in [...fila, ...fila, ...fila]" :key="f"
             class="w-[130px] sm:w-[150px] shrink-0 relative rounded-2xl overflow-hidden">
-            <NuxtImg :src="`/images/habitos/${foto.src}.jpg`" alt="" width="300" height="400" format="webp"
-              class="w-full aspect-[3/4] object-cover" />
+            <NuxtImg :src="`/images/habitos/${foto.src}.webp`" :alt="foto.alt" width="300" height="400"
+              format="webp" decoding="async" class="w-full aspect-[3/4] object-cover" />
             <div class="absolute inset-0 bg-green-dark/25 mix-blend-multiply" />
           </div>
         </div>
@@ -52,8 +52,8 @@
           :data-dir="c % 2 === 0 ? 1 : -1">
           <div v-for="(foto, f) in [...col, ...col, ...col]" :key="f"
             class="shrink-0 relative rounded-3xl overflow-hidden">
-            <NuxtImg :src="`/images/habitos/${foto.src}.jpg`" alt="" width="480" height="640" format="webp"
-              class="w-full aspect-[3/4] object-cover" />
+            <NuxtImg :src="`/images/habitos/${foto.src}.webp`" :alt="foto.alt" width="480" height="640"
+              format="webp" decoding="async" class="w-full aspect-[3/4] object-cover" />
             <div class="absolute inset-0 bg-green-dark/25 mix-blend-multiply" />
           </div>
         </div>
@@ -68,31 +68,30 @@ import { SplitText } from 'gsap/SplitText'
 
 const filas = [
   [
-    { src: '1' },
-    { src: '2' },
-    { src: '3' },
-    { src: '4' },
-    { src: '5' },
-    { src: '6' },
-    { src: '7' },
+    { src: 'correr-parque', alt: 'Hombre corriendo por un camino arbolado de un parque' },
+    { src: 'leer-libro-cafe', alt: 'Libro abierto sobre una mesa junto a una taza y un señalador de suma' },
+    { src: 'plancha-parque', alt: 'Mujer haciendo plancha sobre el césped de un parque' },
+    { src: 'meditar-terraza', alt: 'Hombre meditando sentado sobre una colchoneta al aire libre' },
+    { src: 'amigos-parque', alt: 'Tres amigos charlando sentados en el césped de un parque' },
+    { src: 'entregar-bolsa', alt: 'Mujer joven entregándole una bolsa a una mujer mayor' },
+    { src: 'pasear-perro', alt: 'Hombre paseando a su perro golden retriever por un camino arbolado' },
   ],
   [
-    { src: '8' },
-    { src: '9' },
-    { src: '10' },
-    { src: '11' },
-    { src: '12' },
-    { src: '13' },
-    { src: '14' },
-
+    { src: 'escritorio-ordenado', alt: 'Escritorio junto a una ventana con una notebook, una planta y una taza' },
+    { src: 'meditar-amanecer', alt: 'Mujer meditando sentada en el césped de un parque al amanecer' },
+    { src: 'desayuno-granola', alt: 'Mano sirviendo miel sobre un bowl de granola con frutas' },
+    { src: 'andar-en-bici', alt: 'Hombre con casco andando en bicicleta por un parque' },
+    { src: 'rutina-de-piel', alt: 'Mujer aplicándose crema frente al espejo del baño' },
+    { src: 'escribir-diario', alt: 'Mano escribiendo en un cuaderno junto a un café y una medialuna' },
+    { src: 'elongar-en-grupo', alt: 'Grupo de personas elongando en el césped de un parque' },
   ],
   [
-    { src: '15' },
-    { src: '16' },
-    { src: '17' },
-    { src: '18' },
-    { src: '19' },
-    { src: '20' },
+    { src: 'leer-en-la-plaza', alt: 'Hombre leyendo un libro sentado en un banco de plaza' },
+    { src: 'regar-plantas', alt: 'Mujer regando las plantas de su balcón' },
+    { src: 'picnic-en-pareja', alt: 'Pareja compartiendo frutas sentada en el césped' },
+    { src: 'preparar-viandas', alt: 'Manos guardando pollo con brócoli y arroz en un tupper' },
+    { src: 'brindis-con-limonada', alt: 'Tres amigos brindando con limonada al aire libre' },
+    { src: 'elongar-en-balcon', alt: 'Hombre elongando la pierna en el balcón después de entrenar' },
   ],
 ]
 
@@ -139,15 +138,27 @@ useGsapContext(root, (ctx) => {
 
   gsap.set('.col-in', { opacity: 0, y: 24 })
 
+  // El form de canje vive dentro de .col-in: si SplitText o las fuentes fallan, tiene que aparecer igual
+  let revelado = false
+  const revelarColumna = () => {
+    if (revelado) return
+    revelado = true
+    gsap.to('.col-in', { opacity: 1, y: 0, duration: 0.8, stagger: 0.12 })
+  }
+  const salvavidas = setTimeout(revelarColumna, 2500)
+  ctx.add(() => () => clearTimeout(salvavidas))
+
   document.fonts.ready.then(() => {
-    if (!titleRef.value) return
+    if (!titleRef.value) return revelarColumna()
     const split = new SplitText(titleRef.value, { type: 'words' })
     ctx.add(() => {
+      revelado = true
+      clearTimeout(salvavidas)
       const tl = gsap.timeline({ defaults: { ease: 'power4.out' } })
       tl.from(split.words, { yPercent: 110, opacity: 0, duration: 0.9, stagger: 0.05 }, 0.1)
         .to('.col-in', { opacity: 1, y: 0, duration: 0.8, stagger: 0.12 }, 0.35)
     })
-  })
+  }).catch(revelarColumna)
 
   gsap.from('.columna', { opacity: 0, x: 60, duration: 1.1, stagger: 0.12, ease: 'power3.out', delay: 0.3 })
   gsap.from('.fila', { opacity: 0, y: 40, duration: 1.1, stagger: 0.12, ease: 'power3.out', delay: 0.3 })
@@ -158,6 +169,8 @@ useGsapContext(root, (ctx) => {
   ]
   const loops = []
   function armarLoops() {
+    // Re-armar sin restaurar el progreso hace que el loop salte de vuelta al principio
+    const progresos = loops.map(t => t.progress())
     loops.forEach(t => t.kill())
     loops.length = 0
     pistas.forEach(({ els, eje, medida }) => {
@@ -178,15 +191,20 @@ useGsapContext(root, (ctx) => {
         }))
       })
     })
+    loops.forEach((t, i) => { if (progresos[i] != null) t.progress(progresos[i]) })
   }
 
   armarLoops()
-  const imgs = root.value.querySelectorAll('.fila img, .columna img')
-  let pendientes = imgs.length
-  if (pendientes === 0) armarLoops()
+
+  // Una sola re-medición, cuando ya cargaron todas: re-armar en cada carga suelta
+  // reinicia el loop y se ve como un salto.
+  const imgs = [...root.value.querySelectorAll('.fila img, .columna img')]
+  let pendientes = imgs.filter(img => !img.complete).length
+  const alCargar = () => { if (--pendientes === 0) armarLoops() }
   imgs.forEach((img) => {
-    if (img.complete) { if (--pendientes === 0) armarLoops() }
-    else img.addEventListener('load', () => { if (--pendientes === 0) armarLoops() }, { once: true })
+    if (img.complete) return
+    img.addEventListener('load', alCargar, { once: true })
+    img.addEventListener('error', alCargar, { once: true })
   })
 
   const alCambiarViewport = () => armarLoops()

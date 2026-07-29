@@ -1,0 +1,20 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git rm *)",
+      "Bash(rmdir app/types)",
+      "Bash(rm -rf .nuxt .output)",
+      "Bash(npm view *)",
+      "Bash(sips --help)",
+      "Bash(node -e \"console.log\\(require\\('sharp'\\).format.webp?'sharp webp ok':'no'\\)\")",
+      "Bash(cd \"/Users/laracrupnicoff/Desktop/DA VINCI/4 CUATRI/Proyecto Final/LandingSuma\" && mkdir -p _originales/habitos && cp public/images/habitos/*.jpg _originales/habitos/ && ls _originales/habitos | wc -l && du -sh _originales/habitos)",
+      "Bash(node -e ' *)",
+      "Bash(mkdir -p _originales/marcas)",
+      "Bash(cp public/images/marcas/* _originales/marcas/)",
+      "Bash(npm audit *)"
+    ],
+    "additionalDirectories": [
+      "/Users/laracrupnicoff/Desktop/DA VINCI/4 CUATRI/Proyecto Final/LandingSuma/public/images/habitos"
+    ]
+  }
+}
